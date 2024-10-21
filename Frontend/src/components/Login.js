@@ -47,6 +47,8 @@ function Login({ onLogin }) {
             console.error('Error during POST request:', error);
             setError(error.message); // Ustaw komunikat błędu
             */
+        // Sprawdzenie, czy login i hasło są poprawne
+
         //todo usuń to
         if (username === '123' && password === '123') {
             // Symulacja logowania: przechowaj token lub inne dane
