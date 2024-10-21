@@ -58,3 +58,10 @@ h2 {
 .move-button:hover {
     color: gray;
 }
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+}
+

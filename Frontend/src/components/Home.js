@@ -1,12 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Tile from './Tile';
 import './Home.css';
 import game1Image from '../assets/images/ship.jpg'
 import game2Image from '../assets/images/TicTacToe.jpg';
+import ShipGame from './ShipGame/ShipGame';
 
 function Home() {
+    const navigate = useNavigate();
     const handlePlayGame1 = () => {
-        alert('Zagraj w grę 1');
+        navigate('/ship-game');
     };
 
     const handlePlayGame2 = () => {
