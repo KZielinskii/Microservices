@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
+import ShipGame from './components/ShipGame/ShipGame';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -32,6 +33,10 @@ function App() {
             <Route
                 path="/home"
                 element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+            />
+            <Route
+                path="/ship-game"
+                element={isAuthenticated ? <ShipGame /> : <Navigate to="/login" />}
             />
             <Route path="/" element={<Navigate to={isAuthenticated ? '/home' : '/login'} />} />
           </Routes>

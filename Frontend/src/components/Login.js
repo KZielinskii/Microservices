@@ -13,7 +13,7 @@ function Login({ onLogin }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(''); // Resetowanie błędu przed nową próbą logowania
-
+        /*
         try {
             const response = await fetch('http://localhost:8081/login', {
                 method: 'POST',  // Ustawienie metody na POST
@@ -46,7 +46,19 @@ function Login({ onLogin }) {
         } catch (error) {
             console.error('Error during POST request:', error);
             setError(error.message); // Ustaw komunikat błędu
+            */
+        //todo usuń to
+        if (username === '123' && password === '123') {
+            // Symulacja logowania: przechowaj token lub inne dane
+            localStorage.setItem('token', 'fake_token'); // Możesz tu ustawić dowolny token
+            console.log('Logowanie powiodło się');
+            onLogin(); // Dodatkowa logika np. zalogowanie użytkownika
+            navigate('/'); // Przekierowanie po zalogowaniu, możesz zmienić na odpowiednią trasę
+        } else {
+            // Ustawienie komunikatu błędu, jeśli login lub hasło są niepoprawne
+            setError('Nieprawidłowy login lub hasło');
         }
+        //todo koniec
     };
 
     const handleNavigateToLogin = () => {

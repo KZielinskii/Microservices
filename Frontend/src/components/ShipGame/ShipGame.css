@@ -1,7 +1,15 @@
+.ship-game {
+    text-align: center;
+}
+
+.boards-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 .board {
-    display: grid;
-    grid-template-columns: repeat(10, 40px);
-    gap: 5px;
+    margin: 0 10px;
 }
 
 .row {
@@ -9,19 +17,16 @@
 }
 
 .cell {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border: 1px solid #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
 }
 
-.cell.ship {
-    background-color: #00f;
+.cell.hit {
+    background-color: red;
 }
 
-.cell.hit {
-    background-color: #f00;
+.cell.ship {
+    background-color: blue;
 }
