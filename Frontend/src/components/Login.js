@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 function Login({ onLogin }) {
@@ -6,6 +7,7 @@ function Login({ onLogin }) {
     const [username, setUsername] = useState(''); // Stan dla pola username
     const [password, setPassword] = useState(''); // Stan dla pola password
 
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -42,6 +44,10 @@ function Login({ onLogin }) {
         }
     };
 
+    const handleNavigateToLogin = () => {
+        navigate('/register');
+    };
+
     return (
         <div className="login-container">
             <div className="login-box">
@@ -55,6 +61,9 @@ function Login({ onLogin }) {
                     </div>
                     <button type="submit" className="login-button">Log In</button>
                 </form>
+                <button onClick={handleNavigateToLogin} className="move-button">
+                    Nie posiadasz konta? Zarejestruj się.
+                </button>
             </div>
         </div>
     );
