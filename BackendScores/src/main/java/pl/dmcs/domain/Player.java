@@ -132,4 +132,44 @@ public class Player {
         }
         return true;
     }
+    public boolean shootTile(int x, int y)
+    {
+        if(x < 0 || x >= Board.length || y < 0 || y >= Board[0].length)
+            return false;
+        if(Board[x][y] == 1) {
+            Board[x][y] = 2;
+            return true;
+        }
+        if(Board[x][y] == 0) {
+            Board[x][y] = -1;
+            return true;
+        }
+        return  false;
+    }
+    public boolean lostGame()
+    {
+        for(int i = 0; i < Board.length; i++)
+            for(int j = 0; j < Board[0].length; j++)
+            {
+                if(Board[i][j] == 1)
+                    return false;
+            }
+        return true;
+    }
+    public boolean moveRandom()
+    {
+        Random rand = new Random();
+        while (true) {
+            int x = rand.nextInt(Board.length);
+            int y = rand.nextInt(Board[0].length);
+            if(shootTile(x, y))
+                break;
+        }
+        return true;
+    }
+    public int getScore()
+    {
+        int score = 0;
+        return score;
+    }
 }
