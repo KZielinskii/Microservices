@@ -13,10 +13,11 @@ function Login({ onLogin }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(''); // Resetowanie błędu przed nową próbą logowania
+
         /*
         try {
-            const response = await fetch('http://localhost:8081/login', {
-                method: 'POST',  // Ustawienie metody na POST
+            const response = await fetch('http://localhost:8082/security/login', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',  // Określenie, że wysyłamy dane w formacie JSON
                 },
@@ -45,11 +46,11 @@ function Login({ onLogin }) {
             onLogin();
         } catch (error) {
             console.error('Error during POST request:', error);
-            setError(error.message); // Ustaw komunikat błędu
-            */
-        // Sprawdzenie, czy login i hasło są poprawne
+            setError(error.message);
+        }
 
-        //todo usuń to
+         */
+
         if (username === '123' && password === '123') {
             // Symulacja logowania: przechowaj token lub inne dane
             localStorage.setItem('token', 'fake_token'); // Możesz tu ustawić dowolny token
@@ -60,7 +61,8 @@ function Login({ onLogin }) {
             // Ustawienie komunikatu błędu, jeśli login lub hasło są niepoprawne
             setError('Nieprawidłowy login lub hasło');
         }
-        //todo koniec
+
+
     };
 
     const handleNavigateToLogin = () => {
@@ -92,7 +94,7 @@ function Login({ onLogin }) {
                     </div>
                     <button type="submit" className="login-button">Log In</button>
                 </form>
-                {error && <p className="error-message">{error}</p>} {/* Wyświetlenie komunikatu o błędzie */}
+                {error && <p className="error-message">{error}</p>}
                 <button onClick={handleNavigateToLogin} className="move-button">
                     Nie posiadasz konta? Zarejestruj się.
                 </button>

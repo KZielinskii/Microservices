@@ -19,7 +19,7 @@ function Register({ onRegister }) {
         }
 
         try {
-            const response = await fetch('http://localhost:8081/register', {
+            const response = await fetch('http://localhost:8082/security/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
 import ShipGame from './components/ShipGame/ShipGame';
+import TicTacToe from './components/TicTacToe/Board'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,6 +38,10 @@ function App() {
             <Route
                 path="/ship-game"
                 element={isAuthenticated ? <ShipGame /> : <Navigate to="/login" />}
+            />
+            <Route
+                path="/tic-tac-toe"
+                element={isAuthenticated ? <TicTacToe /> : <Navigate to="/login" />}
             />
             <Route path="/" element={<Navigate to={isAuthenticated ? '/home' : '/login'} />} />
           </Routes>

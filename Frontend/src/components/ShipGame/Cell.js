@@ -1,14 +1,6 @@
-import React from 'react';
-import './ShipGame.css';
-
-function Cell({ onClick, isHit, isShip }) {
-    const cellClass = isHit ? 'cell hit' : isShip ? 'cell ship' : 'cell';
-
-    return (
-        <div className={cellClass} onClick={onClick}>
-            {isHit && 'X'}
-        </div>
-    );
+function Cell({ isHit, isShip, onClick }) {
+    const cellClass = `ship_cell ${isShip ? "ship" : ""} ${isHit ? "hit" : ""} ${isShip && isHit ? "ship-hit" : ""}`;
+    return <div className={cellClass} onClick={onClick} />;
 }
 
 export default Cell;

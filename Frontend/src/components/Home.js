@@ -4,7 +4,6 @@ import Tile from './Tile';
 import './Home.css';
 import game1Image from '../assets/images/ship.jpg'
 import game2Image from '../assets/images/TicTacToe.jpg';
-import ShipGame from './ShipGame/ShipGame';
 
 function Home() {
     const navigate = useNavigate();
@@ -13,7 +12,7 @@ function Home() {
     };
 
     const handlePlayGame2 = () => {
-        alert('Zagraj w grę 2');
+        navigate('/tic-tac-toe');
     };
 
     return (
