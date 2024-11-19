@@ -25,7 +25,7 @@ public class GameScoresController {
 
     @PostMapping("/game-scores")
     public ResponseEntity<String> addGameScore(@RequestBody Game game) {
-        Long gameId = scoreService.getGameId(game.getName());
+        Long gameId  = scoreService.getGameId(game.getName());
         Game gameInstance = gameService.getGameByName(game.getName());
         for(Score score : game.getScores()) {
             score.setGame(gameInstance);

@@ -45,4 +45,86 @@ public class GameManager {
             }
         }
     }
+    public void startGame()
+    {
+        setHuman(new Player());
+        setAi(new Player());
+        Player hum = getHuman();
+        Player si = getAi();
+        hum.initialize();
+        hum.setupShips();
+        si.initialize();
+        si.setupShips();
+    }
+    public String makeMove(int x, int y)
+    {
+        Player si = getAi();
+        Player hum = getHuman();
+        int move_result = si.shootTile(x,y);
+        if(si.lostGame())
+        {
+            printBoard();
+            return "Human won";
+        }
+        if(move_result == 1)
+        {
+            printBoard();
+            return "A ship has been hit you have additional move";
+        }
+        setAi(si);
+        setAi_board(si.getBoard());
+        hideShips(0);
+        hum.moveRandom();
+        setHuman(hum);
+        setHuman_board(hum.getBoard());
+        hideShips(1);
+        if(hum.lostGame())
+        {
+            printBoard();
+            return "AI won";
+        }
+        printBoard();
+        return "Your move";
+    }
+    public void hideShips(int player_type)
+    {
+        if(player_type == 1)
+        {
+            int[][]board = getHuman_board();
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[0].length; j++) {
+                    if(board[i][j] == 1)
+                        board[i][j] = 0;
+                }
+            }
+            setHuman_board(board);
+        }
+        else {
+            int[][]board = getAi_board();
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[0].length; j++) {
+                    if(board[i][j] == 1)
+                        board[i][j] = 0;
+                }
+            }
+            setAi_board(board);
+        }
+    }
+    public void printBoard()
+    {
+        System.out.println("Human:\n");
+        for (int[] row : getHuman_board()) {
+            for (int cell : row) {
+                System.out.print(cell + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("AI:\n");
+        for (int[] row : getAi_board()) {
+            for (int cell : row) {
+                System.out.print(cell + " ");
+            }
+            System.out.println();
+        }
+    }
 }

@@ -1,17 +1,32 @@
 package pl.nsa;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Random;
 
-@ApplicationScoped
+
 public class GameSession implements Serializable {
     private char[][] board = new char[3][3];
     private Difficulty difficulty;
     private char playerSymbol;
     private char aiSymbol;
     private Long UserId;
+    private Integer moveCounter = 0;
+
+
+    GameScoreCalculator gameScoreCalculator;
+
+
+    public GameScoreCalculator getGameScoreCalculator() {
+        return gameScoreCalculator;
+    }
+
+    public void setGameScoreCalculator(GameScoreCalculator gameScoreCalculator) {
+        this.gameScoreCalculator = gameScoreCalculator;
+    }
 
     public void initializeGame(Difficulty difficulty) {
         this.difficulty = difficulty;
@@ -24,6 +39,16 @@ public class GameSession implements Serializable {
         this.playerSymbol= 'X';
         this.aiSymbol = 'O';
     }
+
+    public void updateMoveCounter() {
+        this.moveCounter++;
+    }
+
+    public void calculateScore(GameResult gameResult) {
+        int score = gameScoreCalculator.calculateScore(gameResult, difficulty, moveCounter);
+        System.out.println("Score: " + score);
+    }
+
     public void setPlayerSymbol(char symbol) {
         if (symbol == 'X' || symbol == 'O') {
             this.playerSymbol = symbol;
@@ -33,6 +58,7 @@ public class GameSession implements Serializable {
         }
     }
     public boolean makePlayerMove(PlayerMove move) {
+        System.out.println(Arrays.deepToString(this.board));
         if (move.x < 0 || move.x > 2 || move.y < 0 || move.y > 2 || board[move.x][move.y] != '-') {
             return false; // Invalid move
         }

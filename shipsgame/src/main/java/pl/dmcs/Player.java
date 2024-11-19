@@ -114,6 +114,7 @@ public class Player implements Serializable {
                 }
             }
         }
+        printShips();
     }
     public boolean isTileValid(int x, int y, Direction direction)
     {
@@ -137,19 +138,20 @@ public class Player implements Serializable {
         }
         return true;
     }
-    public boolean shootTile(int x, int y)
+    public int shootTile(int x, int y)
     {
         if(x < 0 || x >= Board.length || y < 0 || y >= Board[0].length)
-            return false;
+            return -1;
         if(Board[x][y] == 1) {
             Board[x][y] = 2;
-            return true;
+            isShipSunken(x,y);
+            return 1;
         }
         if(Board[x][y] == 0) {
             Board[x][y] = -1;
-            return true;
+            return 0;
         }
-        return  false;
+        return  -1;
     }
     public boolean lostGame()
     {
@@ -167,7 +169,7 @@ public class Player implements Serializable {
         while (true) {
             int x = rand.nextInt(Board.length);
             int y = rand.nextInt(Board[0].length);
-            if(shootTile(x, y))
+            if(shootTile(x, y)==0)
                 break;
         }
         return true;
@@ -180,19 +182,60 @@ public class Player implements Serializable {
                 direction = Direction.values()[m];
                 if(checkForShip(x_position, y_position, j, direction)) {
                     setTilesNearSunkenShip(x_position,y_position,j,direction);
+                    sunkenShips.add(j);
                     return true;
                 }
             }
         }
         return false;
     }
-    private void setTilesNearSunkenShip(int x,int y,int ship_size,Direction direction)
-    {
-        
+    private void setTilesNearSunkenShip(int x, int y, int ship_size, Direction direction) {
+        for (int i = 0; i < ship_size; i++) {
+            int xPos = x;
+            int yPos = y;
+            switch (direction) {
+                case UP:
+                    xPos = x - i;
+                    break;
+                case RIGHT:
+                    yPos = y + i;
+                    break;
+                case DOWN:
+                    xPos = x + i;
+                    break;
+                case LEFT:
+                    yPos = y - i;
+                    break;
+            }
+            markSurroundingTiles(xPos, yPos);
+        }
+    }
+    private void markSurroundingTiles(int x, int y) {
+        int[][] neighbors = {
+                {x - 1, y - 1}, {x - 1, y}, {x - 1, y + 1},
+                {x, y - 1},               {x, y + 1},
+                {x + 1, y - 1}, {x + 1, y}, {x + 1, y + 1}
+        };
+        for (int[] neighbor : neighbors) {
+            int nx = neighbor[0];
+            int ny = neighbor[1];
+
+            if (nx >= 0 && nx < Board.length && ny >= 0 && ny < Board[0].length) {
+                if (Board[nx][ny] != 2) {
+                    Board[nx][ny] = -1;
+                }
+            }
+        }
     }
     public int getScore()
     {
         int score = 0 ;
+        for (int i = 0; i < Board.length; i++) {
+            for (int j = 0; j < Board[0].length; j++) {
+                if(Board[i][j] == 1)
+                    score += 25;
+            }
+        }
         return score;
     }
     public boolean checkForShip(int x_start,int y_start,int ship_size,Direction dir)
@@ -237,6 +280,16 @@ public class Player implements Serializable {
                 break;
         }
         return true;
+    }
+    public void printShips()
+    {
+        for (int[] row : getBoard()) {
+            for (int cell : row) {
+                System.out.print(cell + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("\n\n\n");
     }
 }
 

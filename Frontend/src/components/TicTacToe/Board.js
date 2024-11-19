@@ -10,32 +10,17 @@ function Board() {
     const location = useLocation();
     const { sessionId, symbol } = location.state;
 
-    useEffect(() => {
-        if (sessionId) {
-            fetchGameState();
-        }
-    }, [sessionId]);
-
-    const fetchGameState = async () => {
-        const response = await fetch(`/game/state`, {
-            headers: { sessionId },
-        });
-        const data = await response.json();
-        setCells(data.board.flat());
-        setWinner(data.status.includes("wins") ? data.status : null);
-        setIsPlayerTurn(data.status === "In progress" && data.board.flat().filter(c => c !== '-').length % 2 === 0);
-    };
-
     const handleClick = async (index) => {
-        if (!isPlayerTurn || cells[index] || winner) return;
+        if (!isPlayerTurn || cells[index] || winner)return;
 
         const x = Math.floor(index / 3);
         const y = index % 3;
-
-        const response = await fetch(`/game/move`, {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8082/game/move`, {
             method: 'POST',
             headers: {
-                'sessionId': sessionId,
+                'Authorization': `Bearer ${token}`,
+                'sessionId': sessionId.sessionId,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ x, y })
@@ -48,7 +33,11 @@ function Board() {
         }
 
         const data = await response.json();
-        setCells(data.board.flat());
+
+        setCells(
+            data.board.flat().map(row => row.split('')).flat().map(cell => (cell === '-' ? null : cell))
+        );
+
         setWinner(data.status.includes("wins") ? data.status : null);
         setIsPlayerTurn(!data.status.includes("wins") && data.status === "In progress");
     };

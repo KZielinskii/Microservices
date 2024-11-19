@@ -10,7 +10,7 @@ function GameSetup() {
     const startGame = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`http://localhost:8085/game/start?difficulty=${difficulty}&symbol=${symbol}`, {
+            const response = await fetch(`http://localhost:8082/game/start?difficulty=${difficulty}&symbol=${symbol}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -24,6 +24,7 @@ function GameSetup() {
             }
 
             const sessionId = await response.json();
+
             navigate('/tic-tac-toe', { state: { sessionId, symbol } });
         } catch (error) {
             console.error('Błąd podczas uruchamiania gry:', error);
@@ -56,7 +57,6 @@ function GameSetup() {
                 </div>
                 <br></br>
                 <button className="start-game-button" onClick={startGame}>Zagraj w grę</button>
-                <br></br>
                 <button className="view-back-button" onClick={goToScores}>Zobacz wyniki</button>
             </div>
         </div>

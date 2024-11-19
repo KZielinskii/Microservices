@@ -1,14 +1,9 @@
 package pl.dmcs;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pl.dmcs.Player;
-import pl.dmcs.SessionManager;
 
 import java.util.UUID;
 
@@ -18,14 +13,39 @@ import java.util.UUID;
 public class ShipsSessionResource {
     @Inject
     SessionManager sessionManager;
-    @POST
+    @GET
     @Path("/start")
     @Produces(MediaType.APPLICATION_JSON)
     public Response startGame() {
-        GameSession gameSession = new GameSession();
+        GameManager gameSession = new GameManager();
         String sessionId = UUID.randomUUID().toString();
+        gameSession.startGame();
         sessionManager.createSession(sessionId, gameSession);
         return Response.ok(sessionId).build();
     }
+    @POST
+    @Path("/move")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response makeMove(@HeaderParam("sessionId") String sessionId, PlayerMove playerMove) {
+        GameManager gameSession = sessionManager.getSession(sessionId);
+        if (gameSession == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Session not found").build();
+        }
+        String result = gameSession.makeMove(playerMove.getX(), playerMove.getY());
+        GameState gameState = new GameState();
+        gameState.setBoard_human(gameSession.getHuman_board());
+        gameState.setBoard_ai(gameSession.getAi_board());
+        gameState.setMessage(result);
+        if (result.equals("Human won")) {
+            return Response.ok(gameState).build();
+        }
+        if (result.equals("AI won")) {
+            return Response.ok(gameState).build();
+        }
+
+        return Response.ok(gameState).build();
+    }
+
 }
 
