@@ -7,7 +7,7 @@ function Navbar({ onLogout }) {
             <div className="profile">
                 <img src="https://via.placeholder.com/40" alt="Profile" className="profile-pic" />
             </div>
-            <button className="logout-button" onClick={onLogout}>Log Out</button>
+            <button className="logout-button" onClick={onLogout}>Wyloguj się</button>
         </nav>
     );
 }

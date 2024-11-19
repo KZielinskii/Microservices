@@ -6,6 +6,8 @@ import Register from './components/Register';
 import Navbar from './components/Navbar';
 import ShipGame from './components/ShipGame/ShipGame';
 import TicTacToe from './components/TicTacToe/Board'
+import GameSetup from "./components/TicTacToe/GameSetup";
+import Scoreboard from "./components/TicTacToe/Scoreboard";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,6 +44,14 @@ function App() {
             <Route
                 path="/tic-tac-toe"
                 element={isAuthenticated ? <TicTacToe /> : <Navigate to="/login" />}
+            />
+            <Route
+                path="/game-setup"
+                element={isAuthenticated ? <GameSetup /> : <Navigate to="/login" />}
+            />
+            <Route
+                path="/scoreboard"
+                element={isAuthenticated ? <Scoreboard /> : <Navigate to="/login" />}
             />
             <Route path="/" element={<Navigate to={isAuthenticated ? '/home' : '/login'} />} />
           </Routes>

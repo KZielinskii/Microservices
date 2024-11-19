@@ -12,7 +12,7 @@ function Home() {
     };
 
     const handlePlayGame2 = () => {
-        navigate('/tic-tac-toe');
+        navigate('/game-setup');
     };
 
     return (

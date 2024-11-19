@@ -11,6 +11,7 @@ public class GameSession implements Serializable {
     private Difficulty difficulty;
     private char playerSymbol;
     private char aiSymbol;
+    private Long UserId;
 
     public void initializeGame(Difficulty difficulty) {
         this.difficulty = difficulty;

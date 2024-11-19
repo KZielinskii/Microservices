@@ -1,0 +1,30 @@
+-------------------------------------------------------------------------------
+Test set: pl.nsa.ExampleResourceTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.320 s <<< FAILURE! -- in pl.nsa.ExampleResourceTest
+pl.nsa.ExampleResourceTest.testHelloEndpoint -- Time elapsed: 0.008 s <<< ERROR!
+java.lang.RuntimeException: io.quarkus.bootstrap.BootstrapException: Failed to create the application model for null
+	at io.quarkus.test.junit.QuarkusTestExtension.throwBootFailureException(QuarkusTestExtension.java:634)
+	at io.quarkus.test.junit.QuarkusTestExtension.interceptTestClassConstructor(QuarkusTestExtension.java:718)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: io.quarkus.bootstrap.BootstrapException: Failed to create the application model for null
+	at io.quarkus.bootstrap.BootstrapAppModelFactory.resolveAppModel(BootstrapAppModelFactory.java:310)
+	at io.quarkus.bootstrap.app.QuarkusBootstrap.bootstrap(QuarkusBootstrap.java:138)
+	at io.quarkus.test.junit.AbstractJvmQuarkusTestExtension.createAugmentor(AbstractJvmQuarkusTestExtension.java:191)
+	at io.quarkus.test.junit.QuarkusTestExtension.doJavaStart(QuarkusTestExtension.java:214)
+	at io.quarkus.test.junit.QuarkusTestExtension.ensureStarted(QuarkusTestExtension.java:601)
+	at io.quarkus.test.junit.QuarkusTestExtension.beforeAll(QuarkusTestExtension.java:651)
+	... 1 more
+Caused by: java.lang.IllegalStateException: Maven lib dir does not exist: 3.8.6/lib
+	at io.quarkus.bootstrap.resolver.maven.options.BootstrapMavenOptions.parse(BootstrapMavenOptions.java:79)
+	at io.quarkus.bootstrap.resolver.maven.options.BootstrapMavenOptions.newInstance(BootstrapMavenOptions.java:122)
+	at io.quarkus.bootstrap.resolver.maven.options.BootstrapMavenOptions.newInstance(BootstrapMavenOptions.java:118)
+	at io.quarkus.bootstrap.resolver.maven.BootstrapMavenContextConfig.getInitializedCliOptions(BootstrapMavenContextConfig.java:351)
+	at io.quarkus.bootstrap.resolver.maven.BootstrapMavenContextConfig.getPomForDirOrNull(BootstrapMavenContextConfig.java:257)
+	at io.quarkus.bootstrap.BootstrapAppModelFactory.createBootstrapMavenContext(BootstrapAppModelFactory.java:201)
+	at io.quarkus.bootstrap.BootstrapAppModelFactory.loadWorkspace(BootstrapAppModelFactory.java:323)
+	at io.quarkus.bootstrap.BootstrapAppModelFactory.resolveAppModel(BootstrapAppModelFactory.java:247)
+	... 6 more
+
