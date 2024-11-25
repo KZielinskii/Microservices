@@ -26,13 +26,13 @@ function Home() {
 
             const data = await response.json();
             localStorage.setItem('sessionId', data.sessionId);
-            localStorage.setItem('human_board', data.human_board);
+            localStorage.setItem('human_board', JSON.stringify(data.human_board));
 
             console.log('Gra rozpoczęta z ID sesji:', data.sessionId);
         } catch (error) {
             console.error('Błąd przy starcie gry:', error);
         }
-        navigate('/ship-game');
+        navigate('/shipsgame');
     };
 
     const handlePlayGame2 = () => {

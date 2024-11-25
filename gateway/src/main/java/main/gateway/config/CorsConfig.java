@@ -31,5 +31,10 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedMethods("POST", "GET", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
+        registry.addMapping("/shipsgame/**")
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("POST", "GET", "PUT", "DELETE")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }

@@ -48,7 +48,7 @@ function App() {
                 element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
             />
             <Route
-                path="/ship-game"
+                path="/shipsgame"
                 element={isAuthenticated ? <ShipGame /> : <Navigate to="/login" />}
             />
             <Route

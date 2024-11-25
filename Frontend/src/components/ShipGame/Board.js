@@ -8,6 +8,15 @@ function Board({ isHuman }) {
     const [board, setBoard] = useState(createBoard());
 
     function createBoard() {
+        if(isHuman) {
+            const humanBoardData = localStorage.getItem('human_board');
+            if (humanBoardData) {
+                const humanBoard = JSON.parse(humanBoardData);
+                console.log(humanBoard);
+            } else {
+                console.log('Brak danych w localStorage pod kluczem "human_board"');
+            }
+        }
         const board = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(0));
         board[1][1] = 1;
         board[4][4] = 1;// Przykładowy statek
