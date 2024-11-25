@@ -37,8 +37,9 @@ function Register({ onRegister }) {
             const data = await response.json();
 
             localStorage.setItem('token', data.token);
+            localStorage.setItem('username', username);
 
-            onRegister(); // Automatyczne zalogowanie po rejestracji
+            onRegister();
         } catch (error) {
             console.error('Error during registration:', error);
             if (error.response) {

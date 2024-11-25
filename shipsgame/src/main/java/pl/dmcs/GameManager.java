@@ -47,37 +47,39 @@ public class GameManager {
     }
     public void startGame()
     {
-        setHuman(new Player());
-        setAi(new Player());
-        Player hum = getHuman();
-        Player si = getAi();
+        Player hum = new Player();
+        Player si = new Player();
         hum.initialize();
         hum.setupShips();
         si.initialize();
         si.setupShips();
+        setAi(si);
+        setHuman(hum);
+        initialize();
+        setHuman_board(hum.getBoard());
+
     }
     public String makeMove(int x, int y)
     {
         Player si = getAi();
         Player hum = getHuman();
         int move_result = si.shootTile(x,y);
-        if(si.lostGame())
-        {
-            printBoard();
-            return "Human won";
-        }
-        if(move_result == 1)
-        {
-            printBoard();
-            return "A ship has been hit you have additional move";
-        }
         setAi(si);
         setAi_board(si.getBoard());
+        setHuman(hum);
+        setHuman_board(hum.getBoard());
+        if(si.lostGame())
+        {
+            return "Human won";
+        }
+        else if(move_result == 1)
+        {
+            return "A ship has been hit you have additional move";
+        }
         hideShips(0);
         hum.moveRandom();
         setHuman(hum);
         setHuman_board(hum.getBoard());
-        hideShips(1);
         if(hum.lostGame())
         {
             printBoard();

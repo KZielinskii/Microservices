@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/dashboard")
 public class GameScoresController {
 
     public GameService gameService;
@@ -23,9 +24,8 @@ public class GameScoresController {
         this.scoreService = scoreService;
     }
 
-    @PostMapping("/game-scores")
+    @PostMapping("/addScore")
     public ResponseEntity<String> addGameScore(@RequestBody Game game) {
-        Long gameId  = scoreService.getGameId(game.getName());
         Game gameInstance = gameService.getGameByName(game.getName());
         for(Score score : game.getScores()) {
             score.setGame(gameInstance);

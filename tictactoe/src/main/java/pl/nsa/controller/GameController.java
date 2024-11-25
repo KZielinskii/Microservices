@@ -41,30 +41,29 @@ public class GameController {
         System.out.println("działa");
         System.out.println("Player move: " + move.getX() + ", " + move.getY());
         GameSession gameSession = sessionManager.getSession(sessionId);
-        System.out.println(gameSession.getGameScoreCalculator());
         if (gameSession == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Session not found").build();
         }
         if (!gameSession.makePlayerMove(move)) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new GameStatus(gameSession.getBoard(), "Invalid move"))
+                    .entity(new GameStatus(gameSession.getBoard(), "Invalid move", 0))
                     .build();
         }
         gameSession.updateMoveCounter();
         if (gameSession.checkWinner()) {
             gameSession.calculateScore(GameResult.WIN);
-            return Response.ok(new GameStatus(gameSession.getBoard(), "Player wins!")).build();
+            return Response.ok(new GameStatus(gameSession.getBoard(), "Player wins!",gameSession.calculateScore(GameResult.WIN))).build();
         }
         if (gameSession.checkDraw()) {
             gameSession.calculateScore(GameResult.DRAW);
-            return Response.ok(new GameStatus(gameSession.getBoard(), "Draw!")).build();
+            return Response.ok(new GameStatus(gameSession.getBoard(), "Draw!",gameSession.calculateScore(GameResult.DRAW))).build();
         }
 
         gameSession.makeAIMove();
         if (gameSession.checkWinner()) {
-            return Response.ok(new GameStatus(gameSession.getBoard(), "AI wins!")).build();
+            return Response.ok(new GameStatus(gameSession.getBoard(), "AI wins!",gameSession.calculateScore(GameResult.LOSE))).build();
         }
 
-        return Response.ok(new GameStatus(gameSession.getBoard(), "In progress")).build();
+        return Response.ok(new GameStatus(gameSession.getBoard(), "In progress",gameSession.calculateScore(GameResult.INPROGRESS))).build();
     }
 }

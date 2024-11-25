@@ -4,44 +4,40 @@ import './Login.css';
 
 function Login({ onLogin }) {
     const [data, setData] = useState([]);
-    const [username, setUsername] = useState(''); // Stan dla pola username
-    const [password, setPassword] = useState(''); // Stan dla pola password
-    const [error, setError] = useState(''); // Stan dla komunikatu o błędzie
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); // Resetowanie błędu przed nową próbą logowania
+        setError('');
 
         try {
             const response = await fetch('http://localhost:8082/security/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',  // Określenie, że wysyłamy dane w formacie JSON
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username: username,  // Przykładowe dane wysyłane w body requesta
+                    username: username,
                     password: password
                 }),
             });
 
-            // Sprawdzenie czy odpowiedź jest OK (status 200-299)
             if (!response.ok) {
-                const errorData = await response.json(); // Odczytaj odpowiedź w przypadku błędu
-                throw new Error(errorData.message || 'Logowanie nie powiodło się'); // Ustaw komunikat błędu
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Logowanie nie powiodło się');
             }
 
-            // Odczytanie odpowiedzi jako JSON
             const data = await response.json();
 
-            // Przechowaj token lub inne dane z odpowiedzi w localStorage
-            localStorage.setItem('token', data.token);  // Jeśli odpowiedź zawiera np. token
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('username', username);
 
-            // Wyświetlenie danych odpowiedzi w konsoli
             console.log('Response data:', data);
 
-            // Dodatkowa logika np. zalogowanie użytkownika
             onLogin();
         } catch (error) {
             console.error('Error during POST request:', error);

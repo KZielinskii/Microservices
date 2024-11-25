@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -15,10 +16,17 @@ public class GameSession implements Serializable {
     private char aiSymbol;
     private Long UserId;
     private Integer moveCounter = 0;
-
+    private final LocalDateTime expirationTime;
 
     GameScoreCalculator gameScoreCalculator;
 
+    public GameSession() {
+        expirationTime = LocalDateTime.now().plusSeconds(300);
+    }
+
+    public boolean isExpired(LocalDateTime now) {
+        return now.isAfter(expirationTime);
+    }
 
     public GameScoreCalculator getGameScoreCalculator() {
         return gameScoreCalculator;
@@ -44,9 +52,10 @@ public class GameSession implements Serializable {
         this.moveCounter++;
     }
 
-    public void calculateScore(GameResult gameResult) {
+    public Integer calculateScore(GameResult gameResult) {
         int score = gameScoreCalculator.calculateScore(gameResult, difficulty, moveCounter);
         System.out.println("Score: " + score);
+        return score;
     }
 
     public void setPlayerSymbol(char symbol) {
@@ -152,7 +161,7 @@ public class GameSession implements Serializable {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (board[i][j] == '-') {
-                        board[i][j] = 'O';
+                        board[i][j] = aiSymbol;
                         best = Math.max(best, minimax(board, depth + 1, false));
                         board[i][j] = '-';
                     }
@@ -164,7 +173,7 @@ public class GameSession implements Serializable {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (board[i][j] == '-') {
-                        board[i][j] = 'X';
+                        board[i][j] = playerSymbol;
                         best = Math.min(best, minimax(board, depth + 1, true));
                         board[i][j] = '-';
                     }

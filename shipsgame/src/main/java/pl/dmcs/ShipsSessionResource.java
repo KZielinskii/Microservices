@@ -21,13 +21,17 @@ public class ShipsSessionResource {
         String sessionId = UUID.randomUUID().toString();
         gameSession.startGame();
         sessionManager.createSession(sessionId, gameSession);
-        return Response.ok(sessionId).build();
+        GameStart gameStart = new GameStart();
+        gameStart.setSessionId(sessionId);
+        gameStart.setHuman_board(gameStart.getHuman_board());
+        return Response.ok(gameStart).build();
     }
     @POST
     @Path("/move")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response makeMove(@HeaderParam("sessionId") String sessionId, PlayerMove playerMove) {
+        System.out.println("Test");
         GameManager gameSession = sessionManager.getSession(sessionId);
         if (gameSession == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Session not found").build();

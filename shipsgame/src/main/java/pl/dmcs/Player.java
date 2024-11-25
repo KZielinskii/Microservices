@@ -2,6 +2,7 @@ package pl.dmcs;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -74,19 +75,19 @@ public class Player implements Serializable {
                         switch (direction)
                         {
                             case UP:
-                                if(isTileValid(x_position-j,y_position,direction) == false)
+                                if(isTileValid(x_position-j,y_position) == false)
                                     valid = false;
                                 break;
                             case RIGHT:
-                                if(isTileValid(x_position,y_position+j,direction) == false)
+                                if(isTileValid(x_position,y_position+j) == false)
                                     valid = false;
                                 break;
                             case DOWN:
-                                if(isTileValid(x_position+j,y_position,direction) == false)
+                                if(isTileValid(x_position+j,y_position) == false)
                                     valid = false;
                                 break;
                             case LEFT:
-                                if(isTileValid(x_position,y_position-j,direction) == false)
+                                if(isTileValid(x_position,y_position-j) == false)
                                     valid = false;
                                 break;
                         }
@@ -116,7 +117,7 @@ public class Player implements Serializable {
         }
         printShips();
     }
-    public boolean isTileValid(int x, int y, Direction direction)
+    public boolean isTileValid(int x, int y)
     {
         if (x < 0 || x >= Board.length || y < 0 || y >= Board[0].length) {
             return false;
@@ -155,10 +156,9 @@ public class Player implements Serializable {
     }
     public boolean lostGame()
     {
-        for(int i = 0; i < Board.length; i++)
-            for(int j = 0; j < Board[0].length; j++)
-            {
-                if(Board[i][j] == 1)
+        for (int[] ints : Board)
+            for (int j = 0; j < Board[0].length; j++) {
+                if (ints[j] == 1)
                     return false;
             }
         return true;
@@ -174,41 +174,40 @@ public class Player implements Serializable {
         }
         return true;
     }
-    private boolean isShipSunken(int x_position, int y_position)
-    {
-        Direction direction;
-        for (int j : shipSizes) {
-            for (int m = 0; m < 4; m++) {
-                direction = Direction.values()[m];
-                if(checkForShip(x_position, y_position, j, direction)) {
-                    setTilesNearSunkenShip(x_position,y_position,j,direction);
-                    sunkenShips.add(j);
-                    return true;
-                }
+    private boolean isShipSunken(int x_position, int y_position) {
+        List<int[]> shipTiles = collectShipTiles(x_position, y_position);
+        for (int[] tile : shipTiles) {
+            System.out.println(Arrays.toString(tile));
+            if (Board[tile[0]][tile[1]] != 2) {
+                return false;
             }
         }
-        return false;
+        for (int[] tile : shipTiles) {
+            markSurroundingTiles(tile[0], tile[1]);
+        }
+        sunkenShips.add(shipTiles.size());
+        return true;
     }
-    private void setTilesNearSunkenShip(int x, int y, int ship_size, Direction direction) {
-        for (int i = 0; i < ship_size; i++) {
-            int xPos = x;
-            int yPos = y;
-            switch (direction) {
-                case UP:
-                    xPos = x - i;
-                    break;
-                case RIGHT:
-                    yPos = y + i;
-                    break;
-                case DOWN:
-                    xPos = x + i;
-                    break;
-                case LEFT:
-                    yPos = y - i;
-                    break;
-            }
-            markSurroundingTiles(xPos, yPos);
+    private List<int[]> collectShipTiles(int x, int y) {
+        List<int[]> shipTiles = new ArrayList<>();
+        boolean[][] visited = new boolean[Board.length][Board[0].length];
+        collectShipTilesDFS(x, y, shipTiles, visited);
+        return shipTiles;
+    }
+
+    private void collectShipTilesDFS(int x, int y, List<int[]> shipTiles, boolean[][] visited) {
+        if (x < 0 || x >= Board.length || y < 0 || y >= Board[0].length) {
+            return;
         }
+        if (visited[x][y] || (Board[x][y] != 2 && Board[x][y] != 1)) {
+            return;
+        }
+        visited[x][y] = true;
+        shipTiles.add(new int[]{x, y});
+        collectShipTilesDFS(x - 1, y, shipTiles, visited);
+        collectShipTilesDFS(x + 1, y, shipTiles, visited);
+        collectShipTilesDFS(x, y - 1, shipTiles, visited);
+        collectShipTilesDFS(x, y + 1, shipTiles, visited);
     }
     private void markSurroundingTiles(int x, int y) {
         int[][] neighbors = {
@@ -238,49 +237,7 @@ public class Player implements Serializable {
         }
         return score;
     }
-    public boolean checkForShip(int x_start,int y_start,int ship_size,Direction dir)
-    {
-        switch (dir)
-        {
-            case UP:
-                if (x_start +ship_size - 1 >= Board.length)
-                    return false;
-                for(int i = x_start+1; i < x_start + ship_size; i++)
-                {
-                    if(Board[i][y_start] != 2)
-                        return false;
-                }
-                break;
-            case RIGHT:
-                if (y_start +ship_size - 1 >= Board.length)
-                    return false;
-                for(int i = y_start+1; i < y_start + ship_size; i++)
-                {
-                    if(Board[x_start][i] != 2)
-                        return false;
-                }
-                break;
-            case DOWN:
-                if (x_start - (ship_size - 1) < 0)
-                    return false;
-                for(int i = 1; i < ship_size; i++)
-                {
-                    if(Board[x_start-i][y_start] != 2)
-                        return false;
-                }
-                break;
-            case LEFT:
-                if (y_start - (ship_size - 1) < 0)
-                    return false;
-                for(int i = 1; i < ship_size; i++)
-                {
-                    if(Board[x_start][y_start-i] != 2)
-                        return false;
-                }
-                break;
-        }
-        return true;
-    }
+
     public void printShips()
     {
         for (int[] row : getBoard()) {

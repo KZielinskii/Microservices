@@ -1,23 +1,23 @@
 package pl.dmcs;
 
 public class GameState {
-    public int[][] board_human;
-    public int[][] board_ai;
+    public int[][] human_board;
+    public int[][] ai_board;
     String message;
     public int[][] getBoard_human() {
-        return board_human;
+        return human_board;
     }
 
     public void setBoard_human(int[][] board_human) {
-        this.board_human = board_human;
+        this.human_board = board_human;
     }
 
     public int[][] getBoard_ai() {
-        return board_ai;
+        return ai_board;
     }
 
     public void setBoard_ai(int[][] board_ai) {
-        this.board_ai = board_ai;
+        this.ai_board = board_ai;
     }
 
     public String getMessage() {

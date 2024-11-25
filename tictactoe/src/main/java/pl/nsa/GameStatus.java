@@ -3,10 +3,12 @@ package pl.nsa;
 public class GameStatus {
     private char[][] board;
     private String status;
+    private Integer score;
 
-    public GameStatus(char[][] board, String status) {
+    public GameStatus(char[][] board, String status, Integer score) {
         this.board = board;
         this.status = status;
+        this.score = score;
     }
 
     public char[][] getBoard() {
@@ -23,5 +25,13 @@ public class GameStatus {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }
