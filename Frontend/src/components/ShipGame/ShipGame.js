@@ -7,8 +7,8 @@ function ShipGame() {
         <div className="ship-game">
             <h1>Gra w Statki</h1>
             <div className="boards-container">
-                <Board player="Gracz 1" />
-                <Board player="Gracz 2" />
+                <Board isHuman={true}/>
+                <Board isHuman={false}/>
             </div>
         </div>
     );

@@ -44,6 +44,7 @@
 .ship_cell.hit {
     animation: hit-animation 0.5s ease-in-out;
     background-color: #ff7f7f;
+    cursor: not-allowed;
 }
 
 @keyframes hit-animation {
@@ -56,6 +57,11 @@
     100% {
         transform: scale(1);
     }
+}
+
+.ship_cell.blocked {
+    background-color: lightgray;
+    cursor: not-allowed;
 }
 
 

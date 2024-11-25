@@ -4,36 +4,39 @@ import './ShipGame.css';
 
 const BOARD_SIZE = 10;
 
-function Board({ player }) {
+function Board({ isHuman }) {
     const [board, setBoard] = useState(createBoard());
-    const [hits, setHits] = useState(Array(BOARD_SIZE).fill(false).map(() => Array(BOARD_SIZE).fill(false)));
 
     function createBoard() {
-        const board = [];
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            const row = [];
-            for (let j = 0; j < BOARD_SIZE; j++) {
-                row.push(false);
-            }
-            board.push(row);
-        }
-        board[1][1] = true; // Przykładowy statek
+        const board = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(0));
+        board[1][1] = 1;
+        board[4][4] = 1;// Przykładowy statek
         return board;
     }
 
     const handleCellClick = (row, col) => {
-        if (hits[row][col]) return; // Już trafiono w tę komórkę
+        if (isHuman) return;
+        const newBoard = board.map(arr => arr.slice());
 
-        const newHits = hits.map(arr => arr.slice());
-        newHits[row][col] = true;
-        setHits(newHits);
+        if (board[row][col] === 1) {
+            newBoard[row][col] = 2;
+            console.log(`Trafiono w statek! Wiersz: ${row}, Kolumna: ${col}`);
+        }
+        if (board[row][col] === 0) {
+            newBoard[row][col] = -1;
+            console.log(`Nietrafiono! Wiersz: ${row}, Kolumna: ${col}`);
+        }
 
-        console.log(`Kliknięto komórkę: Wiersz: ${row}, Kolumna: ${col}`);
+        setBoard(newBoard);
     };
 
     return (
         <div>
-            <h2>{player}</h2>
+            {isHuman ?
+            <h2>Twoja plansza</h2>:
+            <h2>AI plansza</h2>
+        }
+
             <div className="ship_board">
                 {board.map((row, rowIndex) => (
                     <div key={rowIndex} className="row">
@@ -41,8 +44,7 @@ function Board({ player }) {
                             <Cell
                                 key={colIndex}
                                 onClick={() => handleCellClick(rowIndex, colIndex)}
-                                isHit={hits[rowIndex][colIndex]}
-                                isShip={cell}
+                                cellValue={cell}
                             />
                         ))}
                     </div>

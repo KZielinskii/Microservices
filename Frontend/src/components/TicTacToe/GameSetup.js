@@ -6,10 +6,12 @@ function GameSetup() {
     const [difficulty, setDifficulty] = useState('EASY');
     const [symbol, setSymbol] = useState('X');
     const navigate = useNavigate();
+    const sessionId = localStorage.getItem('sessionId');
 
     const startGame = async () => {
         const token = localStorage.getItem('token');
         try {
+
             const response = await fetch(`http://localhost:8082/game/start?difficulty=${difficulty}&symbol=${symbol}`, {
                 method: 'POST',
                 headers: {
@@ -23,7 +25,13 @@ function GameSetup() {
                 throw new Error(errorData.message || 'Nie udało się rozpocząć gry');
             }
 
+            localStorage.removeItem('cells');
+            localStorage.removeItem('isPlayerTurn');
+            localStorage.removeItem('winner');
+
             const sessionId = await response.json();
+            localStorage.setItem('sessionId', sessionId.sessionId);
+            localStorage.setItem('symbol', symbol);
 
             navigate('/tic-tac-toe', { state: { sessionId, symbol } });
         } catch (error) {
@@ -36,13 +44,18 @@ function GameSetup() {
         navigate('/scoreboard');
     };
 
+    const resumeGame = () => {
+        navigate('/tic-tac-toe');
+    };
+
     return (
         <div className="game-setup-container">
             <div className="game-setup-frame">
                 <h1 className="game-setup-title">Ustawienia gry:</h1>
                 <div className="game-setup-option">
                     <label className="option-label">Wybierz trudność:</label>
-                    <select className="option-select" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+                    <select className="option-select" value={difficulty}
+                            onChange={(e) => setDifficulty(e.target.value)}>
                         <option value="EASY">Łatwy</option>
                         <option value="HARD">Trudny</option>
                     </select>
@@ -57,6 +70,9 @@ function GameSetup() {
                 </div>
                 <br></br>
                 <button className="start-game-button" onClick={startGame}>Zagraj w grę</button>
+                {sessionId && (
+                    <button className="start-game-button" onClick={resumeGame}>Wznów grę</button>
+                )}
                 <button className="view-back-button" onClick={goToScores}>Zobacz wyniki</button>
             </div>
         </div>

@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import Cell from './Cell';
 import './TicTacToe.css';
 
 function Board() {
-    const [cells, setCells] = useState(Array(9).fill(null));
-    const [isPlayerTurn, setIsPlayerTurn] = useState(true);
-    const [winner, setWinner] = useState(null);
-    const location = useLocation();
+    const [cells, setCells] = useState(() => {
+        const savedCells = localStorage.getItem('cells');
+        return savedCells ? JSON.parse(savedCells) : Array(9).fill(null);
+    });
+    const [isPlayerTurn, setIsPlayerTurn] = useState(() => {
+        const savedTurn = localStorage.getItem('isPlayerTurn');
+        return savedTurn ? JSON.parse(savedTurn) : true;
+    });
+    const [winner, setWinner] = useState(() => {
+        const savedWinner = localStorage.getItem('winner');
+        return savedWinner ? JSON.parse(savedWinner) : null;
+    });
     const navigate = useNavigate();
-    const { sessionId, symbol } = location.state;
+    const { sessionId, symbol } = {
+        sessionId: localStorage.getItem('sessionId'),
+        symbol: localStorage.getItem('symbol'),
+    };
 
     const handleClick = async (index) => {
         if (!isPlayerTurn || cells[index] || winner)return;
@@ -21,7 +32,7 @@ function Board() {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'sessionId': sessionId.sessionId,
+                'sessionId': sessionId,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ x, y })
@@ -35,13 +46,20 @@ function Board() {
 
         const data = await response.json();
 
-        setCells(
-            data.board.flat().map(row => row.split('')).flat().map(cell => (cell === '-' ? null : cell))
-        );
+        const updatedCells = data.board.flat().map(row => row.split('')).flat().map(cell => (cell === '-' ? null : cell));
+        const updatedWinner = data.status.includes("wins") ? data.status : null;
+        const updatedIsPlayerTurn = !data.status.includes("wins") && data.status === "In progress";
 
-        setWinner(data.status.includes("wins") || data.status.includes("Draw") ? data.status : null);
-        setIsPlayerTurn(!data.status.includes("wins" && !data.status.includes("Draw")) && data.status === "In progress");
+        setCells(updatedCells);
+        setWinner(updatedWinner);
+        setIsPlayerTurn(updatedIsPlayerTurn);
     };
+
+    useEffect(() => {
+        localStorage.setItem('cells', JSON.stringify(cells));
+        localStorage.setItem('isPlayerTurn', JSON.stringify(isPlayerTurn));
+        localStorage.setItem('winner', JSON.stringify(winner));
+    }, [cells, isPlayerTurn, winner]);
 
     const saveScore = async () => {
         const username = localStorage.getItem('username');
@@ -86,11 +104,14 @@ function Board() {
 
     const restartGame = async () => {
         await saveScore();
-        setCells(Array(9).fill(null));
-        setIsPlayerTurn(true);
-        setWinner(null);
+        localStorage.removeItem('cells');
+        localStorage.removeItem('isPlayerTurn');
+        localStorage.removeItem('winner');
+        localStorage.removeItem('sessionId');
+        localStorage.removeItem('symbol');
         navigate('/game-setup');
     };
+
 
     return (
         <div className="tic-tac-toe">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
@@ -14,11 +14,21 @@ function App() {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    localStorage.setItem('isAuthenticated', 'true');
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('token');
   };
+
+  useEffect(() => {
+    const auth = localStorage.getItem('isAuthenticated');
+    if(auth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   return (
       <Router>
