@@ -1,5 +1,7 @@
 package pl.dmcs;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class GameStart {
     public int [][] human_board;
     String sessionId;
