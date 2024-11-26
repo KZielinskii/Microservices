@@ -57,17 +57,19 @@ public class GameManager {
         setHuman(hum);
         initialize();
         setHuman_board(hum.getBoard());
-
+        setAi_board(si.getBoard());
     }
     public String makeMove(int x, int y)
     {
         Player si = getAi();
         Player hum = getHuman();
+        printBoard();
         int move_result = si.shootTile(x,y);
         setAi(si);
         setAi_board(si.getBoard());
         setHuman(hum);
         setHuman_board(hum.getBoard());
+        printBoard();
         if(si.lostGame())
         {
             return "Human won";
@@ -76,7 +78,6 @@ public class GameManager {
         {
             return "A ship has been hit you have additional move";
         }
-        hideShips(0);
         hum.moveRandom();
         setHuman(hum);
         setHuman_board(hum.getBoard());
@@ -85,33 +86,23 @@ public class GameManager {
             printBoard();
             return "AI won";
         }
-        printBoard();
         return "Your move";
     }
-    public void hideShips(int player_type)
-    {
-        if(player_type == 1)
-        {
-            int[][]board = getHuman_board();
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[0].length; j++) {
-                    if(board[i][j] == 1)
-                        board[i][j] = 0;
+    public int[][] hideShips() {
+        int[][] originalBoard = getAi_board();
+        int[][] hiddenBoard = new int[originalBoard.length][originalBoard[0].length];
+        for (int i = 0; i < originalBoard.length; i++) {
+            for (int j = 0; j < originalBoard[0].length; j++) {
+                if (originalBoard[i][j] == 1) {
+                    hiddenBoard[i][j] = 0;
+                } else {
+                    hiddenBoard[i][j] = originalBoard[i][j];
                 }
             }
-            setHuman_board(board);
         }
-        else {
-            int[][]board = getAi_board();
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[0].length; j++) {
-                    if(board[i][j] == 1)
-                        board[i][j] = 0;
-                }
-            }
-            setAi_board(board);
-        }
+        return hiddenBoard;
     }
+
     public void printBoard()
     {
         System.out.println("Human:\n");

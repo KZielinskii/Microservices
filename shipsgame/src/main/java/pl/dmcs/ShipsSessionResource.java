@@ -38,7 +38,7 @@ public class ShipsSessionResource {
         String result = gameSession.makeMove(playerMove.getX(), playerMove.getY());
         GameState gameState = new GameState();
         gameState.setBoard_human(gameSession.getHuman_board());
-        gameState.setBoard_ai(gameSession.getAi_board());
+        gameState.setBoard_ai(gameSession.hideShips());
         gameState.setMessage(result);
         if (result.equals("Human won")) {
             return Response.ok(gameState).build();
