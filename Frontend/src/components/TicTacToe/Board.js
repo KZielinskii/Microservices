@@ -21,6 +21,10 @@ function Board() {
         sessionId: localStorage.getItem('sessionId'),
         symbol: localStorage.getItem('symbol'),
     };
+    const [score, setScore] = useState(() => {
+        const savedScore = localStorage.getItem('score');
+        return savedScore ? JSON.parse(savedScore) : 0;
+    });
 
     const handleClick = async (index) => {
         if (!isPlayerTurn || cells[index] || winner)return;
@@ -50,6 +54,7 @@ function Board() {
         const updatedWinner = data.status.includes("wins") ? data.status : null;
         const updatedIsPlayerTurn = !data.status.includes("wins") && data.status === "In progress";
 
+        setScore(data.score);
         setCells(updatedCells);
         setWinner(updatedWinner);
         setIsPlayerTurn(updatedIsPlayerTurn);
@@ -59,12 +64,12 @@ function Board() {
         localStorage.setItem('cells', JSON.stringify(cells));
         localStorage.setItem('isPlayerTurn', JSON.stringify(isPlayerTurn));
         localStorage.setItem('winner', JSON.stringify(winner));
-    }, [cells, isPlayerTurn, winner]);
+        localStorage.setItem('score', JSON.stringify(score));
+    }, [cells, isPlayerTurn, winner, score]);
 
     const saveScore = async () => {
         const username = localStorage.getItem('username');
         const gameName = "Tic Tac Toe";
-        const score = winner.includes('Player wins') ? 1 : 0;
 
         const scoreData = {
             name: gameName,
@@ -104,6 +109,7 @@ function Board() {
 
     const restartGame = async () => {
         await saveScore();
+        localStorage.removeItem('score');
         localStorage.removeItem('cells');
         localStorage.removeItem('isPlayerTurn');
         localStorage.removeItem('winner');

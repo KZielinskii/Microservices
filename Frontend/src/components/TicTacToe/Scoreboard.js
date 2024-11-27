@@ -6,6 +6,33 @@ function Scoreboard() {
     const [scores, setScores] = useState([]);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchTopScores = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:8082/dashboard/top-scores?gameName=Tic%20Tac%20Toe`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Błąd podczas pobierania wyników');
+                }
+
+                const data = await response.json();
+
+                setScores(data);
+            } catch (error) {
+                console.error('Błąd:', error.message);
+            }
+        };
+
+        fetchTopScores();
+    }, []);
+
     const goBack = () => {
         navigate('/game-setup');
     };
@@ -22,11 +49,11 @@ function Scoreboard() {
                 </tr>
                 </thead>
                 <tbody>
-                {scores.map((score, index) => (
+                {scores.slice(0, 10).map((score, index) => (
                     <tr key={index}>
                         <td>{index + 1}</td>
-                        <td>{score.player}</td>
-                        <td>{score.score}</td>
+                        <td>{score.username || 'Anonim'}</td>
+                        <td>{score.score || 0}</td>
                     </tr>
                 ))}
                 </tbody>

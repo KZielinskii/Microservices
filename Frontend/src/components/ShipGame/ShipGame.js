@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import Board from './Board';
 import './ShipGame.css';
 
-const BOARD_SIZE = 10;
-
 function ShipGame() {
 
     const [aiBoard, setAiBoard] = useState(Array(10).fill().map(() => Array(10).fill(0)));
@@ -21,7 +19,7 @@ function ShipGame() {
     const handleCellClick = async (row, col) => {
         //if (isHuman) return;
 
-        const sessionId = localStorage.getItem('sessionId');
+        const sessionId = localStorage.getItem('sessionId_ship');
         if (!sessionId) {
             console.error('Brak ID sesji w localStorage.');
             return;
