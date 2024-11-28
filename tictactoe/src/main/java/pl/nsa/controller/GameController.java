@@ -1,11 +1,13 @@
 package pl.nsa.controller;
 
 import jakarta.inject.Inject;
+import jakarta.json.Json;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.nsa.*;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 @Path("/game")
@@ -22,7 +24,7 @@ public class GameController {
     @POST
     @Path("/start")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response startGame(@QueryParam("difficulty") String difficulty, @QueryParam("symbol") String symbol) {
+    public Response startGame(@QueryParam("difficulty") String difficulty, @QueryParam("symbol") String symbol, @QueryParam("firstMove") String firstMove) {
         System.out.println("Starting game with difficulty: " + difficulty);
         GameSession gameSession = new GameSession();
         gameSession.setGameScoreCalculator(gameScoreCalculator);
@@ -30,7 +32,15 @@ public class GameController {
         gameSession.setPlayerSymbol(symbol.charAt(0));
         String sessionId = UUID.randomUUID().toString();
         sessionManager.createSession(sessionId, gameSession);
-        return Response.ok("{\"sessionId\": \"" + sessionId+ "\"}" ).build();
+        if(firstMove.equals("AI")) {
+            gameSession.makeAIMove();
+        }
+        String[] board = new String[3];
+        for (int i = 0; i < 3; i++) {
+            board[i] = "\""+ Arrays.toString(gameSession.getBoard()[i]) + "\"";
+            board[i] = board[i].replace("[","").replace("]","").replace(",","").replace(" ","");
+        }
+        return Response.ok("{\"sessionId\": \"" + sessionId+ "\",\"board\":"+ Arrays.toString(board) + "}" ).build();
     }
 
     @POST
@@ -63,7 +73,10 @@ public class GameController {
         if (gameSession.checkWinner()) {
             return Response.ok(new GameStatus(gameSession.getBoard(), "AI wins!",gameSession.calculateScore(GameResult.LOSE))).build();
         }
-
+        if (gameSession.checkDraw()) {
+            gameSession.calculateScore(GameResult.DRAW);
+            return Response.ok(new GameStatus(gameSession.getBoard(), "Draw!",gameSession.calculateScore(GameResult.DRAW))).build();
+        }
         return Response.ok(new GameStatus(gameSession.getBoard(), "In progress",gameSession.calculateScore(GameResult.INPROGRESS))).build();
     }
 }

@@ -51,8 +51,8 @@ function Board() {
         const data = await response.json();
 
         const updatedCells = data.board.flat().map(row => row.split('')).flat().map(cell => (cell === '-' ? null : cell));
-        const updatedWinner = data.status.includes("wins") ? data.status : null;
-        const updatedIsPlayerTurn = !data.status.includes("wins") && data.status === "In progress";
+        const updatedWinner = (data.status.includes("wins")||data.status.includes("Draw")) ? data.status : null;
+        const updatedIsPlayerTurn = (!data.status.includes("wins")&&!data.status.includes("Draw")) && data.status === "In progress";
 
         setScore(data.score);
         setCells(updatedCells);
