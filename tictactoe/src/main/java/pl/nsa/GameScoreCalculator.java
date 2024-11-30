@@ -35,8 +35,10 @@ public class GameScoreCalculator {
         switch (difficulty) {
             case EASY:
                 return 1.0;
-            case HARD:
+            case MEDIUM:
                 return 2.0;
+            case HARD:
+                return 3.0;
             default:
                 return 1.0;
         }

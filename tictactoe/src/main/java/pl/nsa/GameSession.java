@@ -105,11 +105,21 @@ public class GameSession implements Serializable {
     public void makeAIMove() {
         if (difficulty == Difficulty.EASY) {
             makeRandomMove();
-        } else {
+        } else if(difficulty == Difficulty.HARD) {
             makeStrategicMove();
+        } else{
+            makeMixMove();
         }
     }
 
+    private void makeMixMove(){
+        Random random = new Random();
+        if (random.nextDouble() < 0.5) { // 50% szansy na losowy ruch
+            makeRandomMove();
+        } else { // 50% szansy na Minimax
+            makeStrategicMove();
+        }
+    }
 
     private void makeRandomMove() {
         Random random = new Random();

@@ -5,14 +5,16 @@ import './GameSetup.css';
 function GameSetup() {
     const [difficulty, setDifficulty] = useState('EASY');
     const [symbol, setSymbol] = useState('X');
+    const [first, setFirst] = useState('HUMAN');
     const navigate = useNavigate();
     const sessionId = localStorage.getItem('sessionId');
+
 
     const startGame = async () => {
         const token = localStorage.getItem('token');
         try {
 
-            const response = await fetch(`http://localhost:8082/game/start?difficulty=${difficulty}&symbol=${symbol}`, {
+            const response = await fetch(`http://localhost:8082/game/start?difficulty=${difficulty}&symbol=${symbol}&firstMove=${first}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -29,11 +31,13 @@ function GameSetup() {
             localStorage.removeItem('isPlayerTurn');
             localStorage.removeItem('winner');
 
-            const sessionId = await response.json();
-            localStorage.setItem('sessionId', sessionId.sessionId);
+            const resp = await response.json();
+            localStorage.setItem('sessionId', resp.sessionId);
             localStorage.setItem('symbol', symbol);
+            const updatedCells = resp.board.flat().map(row => row.split('')).flat().map(cell => (cell === '-' ? null : cell));
+            localStorage.setItem('cells', JSON.stringify(updatedCells))
 
-            navigate('/tic-tac-toe', { state: { sessionId, symbol } });
+            navigate('/tic-tac-toe', { state: { sessionId, symbol, first } });
         } catch (error) {
             console.error('Błąd podczas uruchamiania gry:', error);
             alert('Błąd podczas uruchamiania gry: ' + error.message);
@@ -60,12 +64,18 @@ function GameSetup() {
                         <option value="HARD">Trudny</option>
                     </select>
                 </div>
-
                 <div className="game-setup-option">
                     <label className="option-label">Wybierz znak:</label>
                     <select className="option-select" value={symbol} onChange={(e) => setSymbol(e.target.value)}>
                         <option value="X">X</option>
                         <option value="O">O</option>
+                    </select>
+                </div>
+                <div className="game-setup-option">
+                    <label className="option-label">Kto zaczyna:</label>
+                    <select className="option-select" value={first} onChange={(e) => setFirst(e.target.value)}>
+                        <option value="HUMAN">Ty</option>
+                        <option value="AI">AI</option>
                     </select>
                 </div>
                 <br></br>
