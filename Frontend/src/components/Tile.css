@@ -43,3 +43,35 @@
 .play-button:hover {
     background-color: #388e3c;
 }
+
+.rate-button {
+    background-color: #197c20;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.rate-button:hover {
+    background-color: #055b09;
+}
+
+.rating-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.star {
+    font-size: 24px;
+    color: #d3d3d3;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star.filled {
+    color: #ffc107;
+}
+

@@ -61,6 +61,7 @@ function GameSetup() {
                     <select className="option-select" value={difficulty}
                             onChange={(e) => setDifficulty(e.target.value)}>
                         <option value="EASY">Łatwy</option>
+                        <option value="MEDIUM">Średni</option>
                         <option value="HARD">Trudny</option>
                     </select>
                 </div>
