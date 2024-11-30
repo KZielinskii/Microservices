@@ -16,8 +16,12 @@ function ShipGame() {
         }
     });
 
+    const [winner, setWinner] = useState(null);
+    const [isGameOver, setIsGameOver] = useState(false);
+
+
     const handleCellClick = async (row, col) => {
-        //if (isHuman) return;
+        if (isGameOver) return;
 
         const sessionId = localStorage.getItem('sessionId_ship');
         if (!sessionId) {
@@ -51,7 +55,8 @@ function ShipGame() {
             localStorage.setItem('human_board', JSON.stringify(data.board_human));
 
             if (data.message === "Human won" || data.message === "AI won") {
-                alert(data.message);
+                setWinner(data.message);
+                setIsGameOver(true);
             }
         } catch (error) {
             console.error('Błąd podczas ruchu:', error);
@@ -60,7 +65,9 @@ function ShipGame() {
 
     return (
         <div className="ship-game">
+            <br/><br/><br/>
             <h1>Gra w Statki</h1>
+            {winner && <h2 className="winner-message">{winner}</h2>}
             <div className="boards-container">
                 <Board
                     isHuman={true}
