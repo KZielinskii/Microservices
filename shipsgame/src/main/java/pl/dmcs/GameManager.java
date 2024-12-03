@@ -1,10 +1,20 @@
 package pl.dmcs;
 
 public class GameManager {
+    public String difficulty;
     private Player human;
     private Player ai;
     private int[][] human_board = new int[10][10];
     private int[][] ai_board = new int[10][10];
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
     public int[][] getAi_board() {
         return ai_board;
     }
@@ -45,8 +55,12 @@ public class GameManager {
             }
         }
     }
-    public void startGame()
+    public void startGame(String difficulty)
     {
+        if(difficulty != null)
+            setDifficulty(difficulty);
+        else
+            setDifficulty("Easy");
         Player hum = new Player();
         Player si = new Player();
         hum.initialize();
@@ -78,7 +92,10 @@ public class GameManager {
         {
             return "A ship has been hit you have additional move";
         }
-        hum.moveRandom();
+        if(getDifficulty().equals("Easy"))
+            hum.moveRandom();
+        else
+            hum.moveSmarter();
         setHuman(hum);
         setHuman_board(hum.getBoard());
         if(hum.lostGame())

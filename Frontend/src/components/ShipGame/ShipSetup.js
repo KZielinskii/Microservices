@@ -74,12 +74,44 @@ const ShipSetup = ({ onSetupComplete }) => {
         setRemainingShips(shipsToPlace.flatMap(ship => Array(ship.count).fill(ship.size)));
     };
 
-    const handleConfirmSetup = () => {
-        const shipCount = remainingShips.length;
-        if (shipCount === 0) {
-            localStorage.setItem('human_board', JSON.stringify(board));
+    const resetBlockedCells = (board) => {
+        return board.map(row => row.map(cell => cell === -1 ? 0 : cell));
+    };
 
-            navigate('/shipsgame');
+    const handleConfirmSetup = async () => {
+        const shipCount = remainingShips.length;
+
+        if (shipCount === 0) {
+            try {
+                const cleanedBoard = resetBlockedCells(board);
+                localStorage.setItem('human_board', JSON.stringify(cleanedBoard));
+                const token = localStorage.getItem('token');
+                const humanBoard = JSON.parse(localStorage.getItem('human_board'));
+
+                const response = await fetch('http://localhost:8082/shipsgame/start', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({human_board: humanBoard}),
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Błąd:', errorData.message);
+                    return;
+                }
+
+                const data = await response.json();
+                localStorage.setItem('sessionId_ship', data.sessionId);
+                localStorage.setItem('human_board', JSON.stringify(data.human_board));
+
+                console.log('Gra rozpoczęta z ID sesji:', data.sessionId);
+                navigate('/shipsgame');
+            } catch (error) {
+                console.error('Błąd podczas uruchamiania gry:', error);
+            }
+
         } else {
             alert(`Pozostało do ustawienia: ${shipCount} statków.`);
         }
