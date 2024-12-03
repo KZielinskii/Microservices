@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
 import ShipGame from './components/ShipGame/ShipGame';
+import ShipSetup from './components/ShipGame/ShipSetup';
 import TicTacToe from './components/TicTacToe/Board'
 import GameSetup from "./components/TicTacToe/GameSetup";
 import Scoreboard from "./components/TicTacToe/Scoreboard";
@@ -50,6 +51,10 @@ function App() {
             <Route
                 path="/shipsgame"
                 element={isAuthenticated ? <ShipGame /> : <Navigate to="/login" />}
+            />
+            <Route
+                path="/shipsgame/setup"
+                element={isAuthenticated ? <ShipSetup /> : <Navigate to="/login" />}
             />
             <Route
                 path="/tic-tac-toe"

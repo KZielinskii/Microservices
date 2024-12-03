@@ -7,33 +7,10 @@ import game2Image from '../assets/images/TicTacToe.jpg';
 
 function Home() {
     const navigate = useNavigate();
-    const handlePlayGame1 = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8082/shipsgame/start', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Błąd przy starcie gry:', errorData.message);
-                return;
-            }
-
-            const data = await response.json();
-            localStorage.setItem('sessionId_ship', data.sessionId);
-            localStorage.setItem('human_board', JSON.stringify(data.human_board));
-
-            console.log('Gra rozpoczęta z ID sesji:', data.sessionId);
-        } catch (error) {
-            console.error('Błąd przy starcie gry:', error);
-        }
-        navigate('/shipsgame');
+    const handlePlayGame1 = () => {
+        navigate('/shipsgame/setup');
     };
+
 
     const handlePlayGame2 = () => {
         navigate('/game-setup');
