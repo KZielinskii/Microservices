@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ShipsSessionResource {
     @Inject
     SessionManager sessionManager;
-    @POST
+    @GET
     @Path("/start")
     @Produces(MediaType.APPLICATION_JSON)
     public Response startGame(StartingBoard startingBoard, String difficulty) {

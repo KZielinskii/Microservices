@@ -1,0 +1,89 @@
+.game-rating-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 30px;
+    padding: 20px;
+    background-color: #fafafa;
+}
+
+.game-rating-container h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.game-rating-container h3 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.game-rating-container label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.game-rating-container input,
+.game-rating-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.game-rating-container input[type="number"] {
+    width: 100px;
+}
+
+.game-rating-container textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.game-rating-container button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.game-rating-container button:hover {
+    background-color: #388e3c;
+}
+
+.reviews-container {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 30px;
+}
+
+.reviews-container .review {
+    background-color: #f0f0f0;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.reviews-container .review p {
+    margin: 5px 0;
+}
+
+.reviews-container .review .username {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.reviews-container .review .rating {
+    color: #ff9800;
+    font-weight: bold;
+}

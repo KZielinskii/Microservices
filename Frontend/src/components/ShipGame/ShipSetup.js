@@ -96,6 +96,8 @@ const ShipSetup = ({ onSetupComplete }) => {
                     },
                     body: JSON.stringify({human_board: humanBoard}),
                 });
+
+                console.log(response.get())
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('Błąd:', errorData.message);
