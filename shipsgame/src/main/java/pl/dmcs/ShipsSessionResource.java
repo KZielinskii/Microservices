@@ -5,6 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.rmi.ServerError;
 import java.util.UUID;
 
 @Path("/shipsgame")
@@ -16,16 +17,23 @@ public class ShipsSessionResource {
     @GET
     @Path("/start")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response startGame() {
+    public Response startGame(StartingBoard startingBoard) {
         GameManager gameSession = new GameManager();
         String sessionId = UUID.randomUUID().toString();
         gameSession.startGame();
+        if(startingBoard != null) {
+            gameSession.getHuman().setBoard(startingBoard.getPlayer_board());
+            gameSession.setHuman_board(startingBoard.getPlayer_board());
+            if(!gameSession.getHuman().validateBoard())
+                return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
         sessionManager.createSession(sessionId, gameSession);
         GameStart gameStart = new GameStart();
         gameStart.setSessionId(sessionId);
         gameStart.setHuman_board(gameSession.getHuman_board());
         return Response.ok(gameStart).build();
     }
+
     @POST
     @Path("/move")
     @Consumes(MediaType.APPLICATION_JSON)

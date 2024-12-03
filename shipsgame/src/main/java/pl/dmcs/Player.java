@@ -295,5 +295,101 @@
             }
             System.out.println("\n\n\n");
         }
+
+        public boolean validateBoard() {
+            boolean[][] visited = new boolean[Board.length][Board[0].length];
+            List<Integer> foundShips = new ArrayList<>();
+
+            for (int x = 0; x < Board.length; x++) {
+                for (int y = 0; y < Board[0].length; y++) {
+                    if (Board[x][y] == 1 && !visited[x][y]) {
+                        int shipLength = collectShipLength(x, y, visited);
+                        foundShips.add(shipLength);
+                    }
+                }
+            }
+
+            int[] shipCount = new int[shipSizes.length];
+            for (int length : foundShips) {
+                boolean matched = false;
+                for (int i = 0; i < shipSizes.length; i++) {
+                    if (shipSizes[i] == length && shipCount[i] < 1) {
+                        shipCount[i]++;
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) {
+                    return false;
+                }
+            }
+
+            for (int count : shipCount) {
+                if (count != 1) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private int collectShipLength(int x, int y, boolean[][] visited) {
+            List<int[]> shipTiles = new ArrayList<>();
+            collectShipTilesDFS(x, y, shipTiles, visited);
+            boolean horizontal = true, vertical = true;
+            int startX = shipTiles.get(0)[0];
+            int startY = shipTiles.get(0)[1];
+
+            for (int[] tile : shipTiles) {
+                if (tile[0] != startX) {
+                    horizontal = false;
+                }
+                if (tile[1] != startY) {
+                    vertical = false;
+                }
+            }
+            if (!horizontal && !vertical) {
+                return -1;
+            }
+
+            for (int[] tile : shipTiles) {
+                int tx = tile[0];
+                int ty = tile[1];
+                if (!areSurroundingTilesEmpty(tx, ty,shipTiles.size())) {
+                    return -1;
+                }
+            }
+
+            return shipTiles.size();
+        }
+
+        private boolean areSurroundingTilesEmpty(int x, int y,int size) {
+            int[][] neighbors = {
+                    {x - 1, y - 1}, {x - 1, y}, {x - 1, y + 1},
+                    {x, y - 1},               {x, y + 1},
+                    {x + 1, y - 1}, {x + 1, y}, {x + 1, y + 1}
+            };
+            int maximum_neighbours = 0;
+            int current_neighbours = 0;
+            if(size>2)
+                maximum_neighbours = 2;
+            if(size==2)
+                maximum_neighbours = 1;
+            for (int[] neighbor : neighbors) {
+                int nx = neighbor[0];
+                int ny = neighbor[1];
+                if (nx >= 0 && nx < Board.length && ny >= 0 && ny < Board[0].length) {
+                    if (Board[nx][ny] == 1) {
+                           current_neighbours++;
+                    }
+                }
+            }
+            System.out.println(current_neighbours+" "+maximum_neighbours);
+            if (current_neighbours > maximum_neighbours) {
+                return false;
+            }
+            return true;
+        }
+
     }
 
