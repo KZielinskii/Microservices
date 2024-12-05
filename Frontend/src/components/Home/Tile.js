@@ -11,9 +11,13 @@ function Tile({ title, imageUrl, onPlay, gameName }) {
         navigate(`/game-rating/${gameName}/${starValue}`);
     };
 
+    const handleRateButton = () => {
+        navigate(`/game-rating/${gameName}/${null}`);
+    };
+
     return (
         <div className="tile">
-            <img src={imageUrl} alt={title} className="tile-image" />
+            <img src={imageUrl} alt={title} className="tile-image"/>
             <h3 className="tile-title">{title}</h3>
             <div className="rating-container">
                 {[...Array(5)].map((_, index) => {
@@ -33,7 +37,7 @@ function Tile({ title, imageUrl, onPlay, gameName }) {
             </div>
             <button className="play-button" onClick={onPlay}>Zagraj w grę</button>
             <br/>
-            <button className="rate-button" onClick={handleRate}>Oceń grę</button>
+            <button className="rate-button" onClick={handleRateButton}>Zobacz opinie</button>
         </div>
     );
 }

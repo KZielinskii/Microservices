@@ -14,17 +14,18 @@ import java.util.UUID;
 public class ShipsSessionResource {
     @Inject
     SessionManager sessionManager;
-    @GET
+    @POST
     @Path("/start")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response startGame(StartingBoard startingBoard, String difficulty) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response startGame(StartingBoard startingBoard,@QueryParam("difficulty")String difficulty) {
         GameManager gameSession = new GameManager();
         String sessionId = UUID.randomUUID().toString();
-        if(difficulty != null)
-            gameSession.startGame(difficulty);
+        if(difficulty.equals("HARD"))
+            gameSession.startGame("HARD");
         else
             gameSession.startGame(null);
-        if(startingBoard != null) {
+        if(startingBoard.getPlayer_board() != null) {
             gameSession.getHuman().setBoard(startingBoard.getPlayer_board());
             gameSession.setHuman_board(startingBoard.getPlayer_board());
             if(!gameSession.getHuman().validateBoard())

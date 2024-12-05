@@ -60,7 +60,7 @@ public class GameManager {
         if(difficulty != null)
             setDifficulty(difficulty);
         else
-            setDifficulty("Easy");
+            setDifficulty("EASY");
         Player hum = new Player();
         Player si = new Player();
         hum.initialize();
@@ -92,7 +92,7 @@ public class GameManager {
         {
             return "A ship has been hit you have additional move";
         }
-        if(getDifficulty().equals("Easy"))
+        if(getDifficulty().equals("EASY"))
             hum.moveRandom();
         else
             hum.moveSmarter();

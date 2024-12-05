@@ -202,15 +202,13 @@
                                 }
 
                                 if (!isTileValid(nx, ny) || Board[nx][ny] == -1) {
-                                    break;
+                                    continue;
                                 }
                                 int result = shootTile(nx, ny);
                                 if (result == 1) {
                                     hit = true;
                                 } else if (result == 0) {
                                     hit = false;
-                                } else {
-                                    break;
                                 }
                             } while (hit);
 
