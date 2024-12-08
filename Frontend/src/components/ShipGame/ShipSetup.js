@@ -152,8 +152,8 @@ const ShipSetup = ({ onSetupComplete }) => {
             <h1>Ustaw swoje statki</h1>
             <div className="setup-container">
                 <div className="ship-button-container">
-                    <h3>Dostępne statki:</h3>
                     <ul>
+                        <h3>Dostępne statki:</h3>
                         {remainingShips.map((size, index) => (
                             <li key={index}>
                                 <button className="ship-button" onClick={() => setSelectedShip({size, isHorizontal: true})}>
@@ -178,7 +178,7 @@ const ShipSetup = ({ onSetupComplete }) => {
                 </div>
                 <div className="ship-button-container">
                     <div className="game-setup-option">
-                        <label className="option-label">Poziom trudności:</label>
+                        <h2 className="option-label">Poziom trudności:</h2>
                         <select className="option-select" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
                             <option value="EASY">Łatwy</option>
                             <option value="HARD">Trudny</option>
