@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import './GameRating.css';
 
 function GameRating() {
-    const { gameName, starValue } = useParams();
+    const {gameName, starValue} = useParams();
     const [reviews, setReviews] = useState([]);
     const [comment, setComment] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
@@ -15,10 +15,10 @@ function GameRating() {
             try {
                 const token = localStorage.getItem('token');
                 const response = await fetch(`http://localhost:8082/review/review-page?gameName=${gameName}&page=${currentPage}&size=10&sortBy=id`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
                 });
                 if (response.ok) {
                     const data = await response.json();
@@ -82,18 +82,23 @@ function GameRating() {
     return (
         <div className="game-rating-container">
             <h1>Oceny i opinie dla "{gameName}"</h1>
-            <div>
-                <h2>Dodaj swoją opinię:</h2>
-                <h3>Ocena: {starValue}</h3>
-                <label>
-                    Komentarz:
-                    <textarea
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                    />
-                </label>
-                <button onClick={handleSubmit}>Dodaj opinię</button>
-            </div>
+            {starValue === "null" ? (
+                <div></div>
+            ) : (
+                <div>
+                    <h2>Dodaj swoją opinię:</h2>
+                    <h3>Ocena: {starValue}</h3>
+                    <label>
+                        Komentarz:
+                        <textarea
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                        />
+                    </label>
+                    <button onClick={handleSubmit}>Dodaj opinię</button>
+                </div>
+            )}
+
             <div className="reviews-container">
                 <h3>Opinie innych użytkowników:</h3>
                 {reviews.length > 0 ? (
