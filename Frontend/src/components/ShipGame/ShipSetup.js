@@ -41,7 +41,7 @@ const ShipSetup = ({ onSetupComplete }) => {
         }
 
         setBoard(newBoard);
-        setRemainingShips(remainingShips.slice(1));
+        setRemainingShips(remainingShips.filter((ship, index) => index !== remainingShips.indexOf(size)));
         return true;
     };
 
