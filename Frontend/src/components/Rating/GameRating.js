@@ -5,35 +5,57 @@ import './GameRating.css';
 function GameRating() {
     const {gameName, starValue} = useParams();
     const [reviews, setReviews] = useState([]);
+    const [average, setAverage] = useState([]);
     const [comment, setComment] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [update, setUpdate] = useState(true);
 
     useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`http://localhost:8082/review/review-page?gameName=${gameName}&page=${currentPage}&size=10&sortBy=id`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setReviews(data.content);
-                    setTotalPages(data.totalPages);
-                } else {
-                    console.error('Nie udało się pobrać opinii.');
-                }
-            } catch (error) {
-                console.error('Błąd podczas pobierania opinii:', error);
-            }
-        };
-
+        fetchAverageRating();
         fetchReviews();
     }, [gameName, currentPage, update]);
+
+    const fetchReviews = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8082/review/review-page?gameName=${gameName}&page=${currentPage}&size=10&sortBy=id`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setReviews(data.content);
+                setTotalPages(data.totalPages);
+            } else {
+                console.error('Nie udało się pobrać opinii.');
+            }
+        } catch (error) {
+            console.error('Błąd podczas pobierania opinii:', error);
+        }
+    };
+
+    const fetchAverageRating = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8082/review/average-rating?gameName=${gameName}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setAverage(data.toFixed(2));
+            } else {
+                console.error('Nie udało się pobrać opinii.');
+            }
+        } catch (error) {
+            console.error('Błąd podczas pobierania opinii:', error);
+        }
+    };
 
     const handleSubmit = async () => {
         try {
@@ -82,6 +104,7 @@ function GameRating() {
     return (
         <div className="game-rating-container">
             <h1>Oceny i opinie dla "{gameName}"</h1>
+            <h2>Średnia opinia: {average}</h2>
             {starValue === "null" ? (
                 <div></div>
             ) : (
