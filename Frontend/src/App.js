@@ -8,7 +8,7 @@ import ShipGame from './components/ShipGame/ShipGame';
 import ShipSetup from './components/ShipGame/ShipSetup';
 import TicTacToe from './components/TicTacToe/Board'
 import GameSetup from "./components/TicTacToe/GameSetup";
-import Scoreboard from "./components/TicTacToe/Scoreboard";
+import Scoreboard from "./components/Scoreboard/Scoreboard";
 import GameRating from './components/Rating/GameRating';
 
 function App() {
@@ -70,7 +70,7 @@ function App() {
                 element={isAuthenticated ? <GameRating /> : <Navigate to="/login" />}
             />
             <Route
-                path="/scoreboard"
+                path="/scoreboard/:gameName"
                 element={isAuthenticated ? <Scoreboard /> : <Navigate to="/login" />}
             />
             <Route path="/" element={<Navigate to={isAuthenticated ? '/home' : '/login'} />} />

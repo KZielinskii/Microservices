@@ -147,6 +147,10 @@ const ShipSetup = ({ onSetupComplete }) => {
             }
     };
 
+    const goToScores = () => {
+        navigate(`/scoreboard/Ships%20game`);
+    };
+
     return (
         <div className="ship-setup">
             <h1>Ustaw swoje statki</h1>
@@ -179,7 +183,8 @@ const ShipSetup = ({ onSetupComplete }) => {
                 <div className="ship-button-container">
                     <div className="game-setup-option">
                         <h2 className="option-label">Poziom trudności:</h2>
-                        <select className="option-select" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+                        <select className="option-select" value={difficulty}
+                                onChange={(e) => setDifficulty(e.target.value)}>
                             <option value="EASY">Łatwy</option>
                             <option value="HARD">Trudny</option>
                         </select>
@@ -187,6 +192,7 @@ const ShipSetup = ({ onSetupComplete }) => {
                     <button className="default-button" onClick={handleRandomSetup}>Wylosuj statki</button>
                     <button className="default-button" onClick={resetBoard}>Resetuj planszę</button>
                     <button className="default-button" onClick={handleConfirmSetup}>Potwierdź ustawienie</button>
+                    <button className="view-back-button" onClick={goToScores}>Zobacz wyniki</button>
                     {selectedShip && (
                         <button className="default-button" onClick={toggleShipOrientation}>
                             Obrot: {selectedShip.isHorizontal ? 'Pionowy' : 'Poziomy'}

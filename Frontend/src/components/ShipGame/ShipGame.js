@@ -18,16 +18,13 @@ function ShipGame() {
 
     const [winner, setWinner] = useState(null);
     const [isGameOver, setIsGameOver] = useState(false);
+    const {sessionId} = {
+        sessionId: localStorage.getItem('sessionId_ship'),
+    }
 
 
     const handleCellClick = async (row, col) => {
         if (isGameOver) return;
-
-        const sessionId = localStorage.getItem('sessionId_ship');
-        if (!sessionId) {
-            console.error('Brak ID sesji w localStorage.');
-            return;
-        }
 
         try {
             const token = localStorage.getItem('token');
@@ -57,9 +54,50 @@ function ShipGame() {
             if (data.message === "Human won" || data.message === "AI won") {
                 setWinner(data.message);
                 setIsGameOver(true);
+                await saveScore(data.score);
             }
         } catch (error) {
             console.error('Błąd podczas ruchu:', error);
+        }
+    };
+
+    const saveScore = async (score) => {
+        const username = localStorage.getItem('username');
+        const gameName = "Ships game";
+
+        const scoreData = {
+            name: gameName,
+            scores: [
+                {
+                    username,
+                    score,
+                },
+            ],
+        };
+
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch('http://localhost:8082/dashboard/addScore', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'sessionId': sessionId,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(scoreData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Błąd przy zapisie wyniku:', errorData.message);
+                alert('Nie udało się zapisać wyniku: ' + errorData.message);
+                return;
+            }
+
+            console.log('Wynik zapisany pomyślnie!');
+        } catch (error) {
+            console.error('Błąd sieci przy zapisie wyniku:', error);
+            alert('Błąd sieci przy zapisie wyniku: ' + error.message);
         }
     };
 

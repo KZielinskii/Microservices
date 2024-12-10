@@ -45,7 +45,7 @@ function GameSetup() {
     };
 
     const goToScores = () => {
-        navigate('/scoreboard');
+        navigate(`/scoreboard/Tic%20Tac%20Toe`);
     };
 
     const resumeGame = () => {
