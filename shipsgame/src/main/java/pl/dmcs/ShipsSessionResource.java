@@ -53,9 +53,11 @@ public class ShipsSessionResource {
         gameState.setBoard_ai(gameSession.hideShips());
         gameState.setMessage(result);
         if (result.equals("Human won")) {
+            gameState.setScore(gameSession.calculateScore(gameSession.getHuman()));
             return Response.ok(gameState).build();
         }
         if (result.equals("AI won")) {
+            gameState.setScore(0);
             return Response.ok(gameState).build();
         }
 

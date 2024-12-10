@@ -31,4 +31,11 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return reviewRepository.findByGameName(gameName,pageable);
     }
+    public double getAverageRating(String gameName) {
+        List<Review> reviews = reviewRepository.findByGameName(gameName);
+        return reviews.stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0.0);
+    }
 }

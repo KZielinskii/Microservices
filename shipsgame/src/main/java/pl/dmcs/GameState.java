@@ -4,6 +4,17 @@ public class GameState {
     public int[][] human_board;
     public int[][] ai_board;
     String message;
+    Integer score;
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+
     public int[][] getBoard_human() {
         return human_board;
     }

@@ -43,4 +43,9 @@ public class ReviewController {
         Page<Review> pages = reviewService.findByGameNamePaged(gameName, page,size, sortBy);
         return ResponseEntity.ok(pages);
     }
+    @GetMapping("/average-rating")
+    public ResponseEntity<Double> getAverageRating(@RequestParam("gameName") String gameName) {
+        double averageRating = reviewService.getAverageRating(gameName);
+        return ResponseEntity.ok(averageRating);
+    }
 }

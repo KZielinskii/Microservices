@@ -73,17 +73,24 @@ public class GameManager {
         setHuman_board(hum.getBoard());
         setAi_board(si.getBoard());
     }
+    public Integer calculateScore(Player player)
+    {
+        if(difficulty.equals("EASY"))
+            return player.getScore();
+        else
+            return player.getScore()*2;
+    }
     public String makeMove(int x, int y)
     {
         Player si = getAi();
         Player hum = getHuman();
-        printBoard();
+        //printBoard();
         int move_result = si.shootTile(x,y);
         setAi(si);
         setAi_board(si.getBoard());
         setHuman(hum);
         setHuman_board(hum.getBoard());
-        printBoard();
+        //printBoard();
         if(si.lostGame())
         {
             return "Human won";

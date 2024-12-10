@@ -115,7 +115,6 @@
                     }
                 }
             }
-            printShips();
         }
         public boolean isTileValid(int x, int y)
         {
@@ -175,17 +174,16 @@
             return true;
         }
         public boolean moveSmarter() {
+            Random rand = new Random();
+
             for (int x = 0; x < Board.length; x++) {
                 for (int y = 0; y < Board[0].length; y++) {
                     if (Board[x][y] == 2) {
-                        Direction[] directions = {Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT};
-
-                        for (Direction direction : directions) {
+                        for (Direction direction : Direction.values()) {
+                            int nx = x, ny = y;
                             boolean hit = false;
-                            int nx = x;
-                            int ny = y;
 
-                            do {
+                            while (true) {
                                 switch (direction) {
                                     case UP:
                                         nx -= 1;
@@ -201,19 +199,24 @@
                                         break;
                                 }
 
-                                if (!isTileValid(nx, ny) || Board[nx][ny] == -1) {
-                                    continue;
+                                if (nx < 0 || nx >= Board.length || ny < 0 || ny >= Board[0].length || Board[nx][ny] == -1 || Board[nx][ny] == 2) {
+                                    break;
                                 }
+
                                 int result = shootTile(nx, ny);
+                                System.out.println("Sprawdzam kierunek " + direction + " od punktu (" + x + ", " + y + ")");
+                                System.out.println("Strzelam w (" + nx + ", " + ny + ") - wynik: " + result);
                                 if (result == 1) {
                                     hit = true;
                                 } else if (result == 0) {
-                                    hit = false;
+                                    return true;
                                 }
-                            } while (hit);
 
+                                if (!hit) {
+                                    break;
+                                }
+                            }
                         }
-                        return true;
                     }
                 }
             }
@@ -222,7 +225,6 @@
         private boolean isShipSunken(int x_position, int y_position) {
             List<int[]> shipTiles = collectShipTiles(x_position, y_position);
             for (int[] tile : shipTiles) {
-                System.out.println(Arrays.toString(tile));
                 if (Board[tile[0]][tile[1]] != 2) {
                     return false;
                 }
