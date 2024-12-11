@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
-function Register({ onRegister }) {
+function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,12 +34,7 @@ function Register({ onRegister }) {
                 throw new Error('Failed to register');
             }
 
-            const data = await response.json();
-
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('username', username);
-
-            onRegister();
+            navigate('/login');
         } catch (error) {
             console.error('Error during registration:', error);
             if (error.response) {

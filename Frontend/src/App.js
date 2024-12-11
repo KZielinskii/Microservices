@@ -6,7 +6,7 @@ import Register from './components/Register/Register';
 import Navbar from './components/Navbar/Navbar';
 import ShipGame from './components/ShipGame/ShipGame';
 import ShipSetup from './components/ShipGame/ShipSetup';
-import TicTacToe from './components/TicTacToe/Board'
+import TicTacToe from './components/TicTacToe/Board';
 import GameSetup from "./components/TicTacToe/GameSetup";
 import Scoreboard from "./components/Scoreboard/Scoreboard";
 import GameRating from './components/Rating/GameRating';
@@ -43,7 +43,7 @@ function App() {
             />
             <Route
                 path="/register"
-                element={isAuthenticated ? <Navigate to="/home" /> : <Register onRegister={handleLogin} />}
+                element={isAuthenticated ? <Navigate to="/home" /> : <Register />}
             />
             <Route
                 path="/home"
