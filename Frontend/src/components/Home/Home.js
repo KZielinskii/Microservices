@@ -15,6 +15,10 @@ function Home() {
         navigate('/game-setup');
     };
 
+    const handlePlayGame3 = () => {
+        navigate('/pong/difficulty');
+    };
+
     return (
         <div className="home-container">
             <Tile
@@ -28,6 +32,12 @@ function Home() {
                 imageUrl={game2Image}
                 onPlay={handlePlayGame2}
                 gameName="Tic Tac Toe"
+            />
+            <Tile
+                title="Pong"
+                imageUrl={game2Image}
+                onPlay={handlePlayGame3}
+                gameName="Pong"
             />
         </div>
     );
