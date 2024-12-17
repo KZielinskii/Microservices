@@ -152,7 +152,7 @@ const ShipSetup = ({ onSetupComplete }) => {
     };
 
     return (
-        <div className="ship-setup">
+        <div className="difficulty-container">
             <h1>Ustaw swoje statki</h1>
             <div className="setup-container">
                 <div className="ship-button-container">
@@ -182,13 +182,14 @@ const ShipSetup = ({ onSetupComplete }) => {
                 </div>
                 <div className="ship-button-container">
                     <div className="game-setup-option">
-                        <h2 className="option-label">Poziom trudności:</h2>
+                        <h3>Poziom trudności:</h3>
                         <select className="option-select" value={difficulty}
                                 onChange={(e) => setDifficulty(e.target.value)}>
                             <option value="EASY">Łatwy</option>
                             <option value="HARD">Trudny</option>
                         </select>
                     </div>
+                    <br/>
                     <button className="default-button" onClick={handleRandomSetup}>Wylosuj statki</button>
                     <button className="default-button" onClick={resetBoard}>Resetuj planszę</button>
                     <button className="default-button" onClick={handleConfirmSetup}>Potwierdź ustawienie</button>

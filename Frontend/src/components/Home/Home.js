@@ -4,6 +4,7 @@ import Tile from './Tile';
 import './Home.css';
 import game1Image from '../../assets/images/ship.jpg'
 import game2Image from '../../assets/images/TicTacToe.jpg';
+import game3Image from '../../assets/images/Pong.jpg';
 
 function Home() {
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ function Home() {
             />
             <Tile
                 title="Pong"
-                imageUrl={game2Image}
+                imageUrl={game3Image}
                 onPlay={handlePlayGame3}
                 gameName="Pong"
             />

@@ -11,6 +11,7 @@ import GameSetup from "./components/TicTacToe/GameSetup";
 import Scoreboard from "./components/Scoreboard/Scoreboard";
 import GameRating from './components/Rating/GameRating';
 import PongSetup from "./components/Pong/PongSetup";
+import PongGame from "./components/Pong/PongGame";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -69,6 +70,10 @@ function App() {
             <Route
                 path="/pong/difficulty"
                 element={isAuthenticated ? <PongSetup/> : <Navigate to="/login" />}
+            />
+            <Route
+                path="/pong/game/"
+                element={isAuthenticated ? <PongGame/> : <Navigate to="/login" />}
             />
             <Route
                 path="/game-rating/:gameName/:starValue"

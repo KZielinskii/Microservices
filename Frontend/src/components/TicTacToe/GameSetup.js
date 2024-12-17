@@ -53,7 +53,7 @@ function GameSetup() {
     };
 
     return (
-        <div className="game-setup-container">
+        <div className="difficulty-container">
             <div className="game-setup-frame">
                 <h1 className="game-setup-title">Ustawienia gry:</h1>
                 <div className="game-setup-option">
