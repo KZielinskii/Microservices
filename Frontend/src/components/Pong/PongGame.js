@@ -59,13 +59,13 @@ function PongGame() {
             let newY = prev;
 
             if (difficulty === 'easy') {
-                random = Math.random() * 6 - 3;
+                random = Math.random() * 5;
                 if (Math.abs(botMovement + random) > 2) {
                     newY = prev + Math.sign(botMovement + random) * 0.5;
                 }
             }
             else if (difficulty === 'medium') {
-                random = Math.random() * 2 - 1;
+                random = Math.random() * 2;
                 if (Math.abs(botMovement + random) > 1) {
                     newY = prev + Math.sign(botMovement + random);
                 }
@@ -84,7 +84,7 @@ function PongGame() {
 
     const resetBall = () => {
         const randomDirection = Math.random() < 0.5 ? -1 : 1;
-        return { x: 50, y: 50, dx: 5 * randomDirection, dy: ball.dy };
+        return { x: 50, y: 45, dx: 5 * randomDirection, dy: ball.dy };
     };
 
     const handleMouseMove = (e) => {
@@ -97,14 +97,85 @@ function PongGame() {
         setPlayerY(newY > 80 ? 80 : newY < 0 ? 0 : newY);
     };
 
-
-
     useEffect(() => {
         if (playerScore >= 10 || botScore >= 10) {
             alert(playerScore >= 10 ? 'Wygrałeś!' : 'Przegrałeś!');
+            const score = getScore();
+            saveScore(score);
             navigate('/');
         }
     }, [playerScore, botScore, navigate]);
+
+    const getScore = async () => {
+
+        const scoreData = {
+            player1Score: playerScore,
+            player2Score: botScore,
+            difficulty: difficulty
+        };
+
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch('http://localhost:8082/pong/calculate-end-score', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(scoreData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Błąd przy zapisie wyniku:', errorData.message);
+                return;
+            }
+
+            console.log('Wynik zapisany pomyślnie!');
+        } catch (error) {
+            console.error('Błąd sieci przy zapisie wyniku:', error);
+            alert('Błąd sieci przy zapisie wyniku: ' + error.message);
+        }
+    };
+
+    const saveScore = async (score) => {
+        const username = localStorage.getItem('username');
+        const gameName = "Pong";
+
+        const scoreData = {
+            name: gameName,
+            scores: [
+                {
+                    username,
+                    score,
+                },
+            ],
+        };
+
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch('http://localhost:8082/dashboard/addScore', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(scoreData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Błąd przy zapisie wyniku:', errorData.message);
+                alert('Nie udało się zapisać wyniku: ' + errorData.message);
+                return;
+            }
+
+            console.log('Wynik zapisany pomyślnie!');
+        } catch (error) {
+            console.error('Błąd sieci przy zapisie wyniku:', error);
+            alert('Błąd sieci przy zapisie wyniku: ' + error.message);
+        }
+    };
 
     return (
         <div className="difficulty-container">
