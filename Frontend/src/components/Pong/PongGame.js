@@ -7,15 +7,15 @@ function PongGame() {
     const difficulty = searchParams.get('difficulty') || 'medium';
 
     const navigate = useNavigate();
-    const [ballSpeed, setBallSpeed] = useState(3);
+    const [ballSpeed, setBallSpeed] = useState(0);
     const [playerScore, setPlayerScore] = useState(0);
     const [botScore, setBotScore] = useState(0);
 
-    const [ball, setBall] = useState({ x: 50, y: 50, dx: 5, dy: 5 });
+    const [ball, setBall] = useState({ x: 50, y: 50, dx: 1, dy: 1 });
     const [playerY, setPlayerY] = useState(40);
     const [botY, setBotY] = useState(40);
 
-    const ballSpeedMap = { easy: 1, medium: 2, hard: 3 };
+    const ballSpeedMap = { easy: 5, medium: 10, hard: 15 };
 
     useEffect(() => {
         setBallSpeed(ballSpeedMap[difficulty]);
@@ -34,9 +34,15 @@ function PongGame() {
 
             if (y <= 0 || y >= 99) dy = -dy;
 
-            if (x <= 2 && y >= playerY && y <= playerY + 20) dx = -dx;
+            if (x <= 3 && y >= playerY-2 && y <= playerY + 22) {
+                x = 3;
+                dx = -dx;
+            }
 
-            if (x >= 97 && y >= botY && y <= botY + 20) dx = -dx;
+            if (x >= 95 && y >= botY-2 && y <= botY + 22){
+                x = 95;
+                dx = -dx;
+            }
 
             if (x <= 0) {
                 setBotScore((score) => score + 1);
@@ -81,64 +87,32 @@ function PongGame() {
         });
     };
 
-
     const resetBall = () => {
         const randomDirection = Math.random() < 0.5 ? -1 : 1;
-        return { x: 50, y: 45, dx: 5 * randomDirection, dy: ball.dy };
+        return { x: 50-randomDirection*35, y: 45, dx: randomDirection, dy: ball.dy };
     };
 
-    const handleMouseMove = (e) => {
-        const pongContainer = document.querySelector('.pong-container');
-        const pongContainerHeight = pongContainer.offsetHeight;
-        const mousePositionInContainer = e.clientY - pongContainer.getBoundingClientRect().top;
-
-        let newY = (mousePositionInContainer / pongContainerHeight) * 100;
-
-        setPlayerY(newY > 80 ? 80 : newY < 0 ? 0 : newY);
+    const handleKeyPress = (e) => {
+        if (e.key === 'w' || e.key === 'W') {
+            const temp = playerY - 5;
+            if (playerY > 0)
+                setPlayerY(temp);
+        } else if (e.key === 's' || e.key === 'S') {
+            const temp = playerY + 5;
+            if (playerY < 80)
+                setPlayerY(temp);
+        }
     };
 
     useEffect(() => {
         if (playerScore >= 10 || botScore >= 10) {
             alert(playerScore >= 10 ? 'Wygrałeś!' : 'Przegrałeś!');
-            const score = getScore();
-            saveScore(score);
+            saveScore();
             navigate('/');
         }
     }, [playerScore, botScore, navigate]);
 
-    const getScore = async () => {
-
-        const scoreData = {
-            player1Score: playerScore,
-            player2Score: botScore,
-            difficulty: difficulty
-        };
-
-        const token = localStorage.getItem('token');
-        try {
-            const response = await fetch('http://localhost:8082/pong/calculate-end-score', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(scoreData),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Błąd przy zapisie wyniku:', errorData.message);
-                return;
-            }
-
-            console.log('Wynik zapisany pomyślnie!');
-        } catch (error) {
-            console.error('Błąd sieci przy zapisie wyniku:', error);
-            alert('Błąd sieci przy zapisie wyniku: ' + error.message);
-        }
-    };
-
-    const saveScore = async (score) => {
+    const saveScore = async () => {
         const username = localStorage.getItem('username');
         const gameName = "Pong";
 
@@ -146,8 +120,7 @@ function PongGame() {
             name: gameName,
             scores: [
                 {
-                    username,
-                    score,
+                    username
                 },
             ],
         };
@@ -184,7 +157,7 @@ function PongGame() {
                 <span>Gracz: {playerScore}</span>
                 <span>Bot: {botScore}</span>
             </div>
-            <div className="pong-container" onMouseMove={handleMouseMove}>
+            <div className="pong-container" tabIndex={0} onKeyDown={handleKeyPress}>
                 <div className="pong-game">
                     <div className="paddle player" style={{top: `${playerY}%`}}></div>
                     <div className="ball" style={{top: `${ball.y}%`, left: `${ball.x}%`}}></div>
