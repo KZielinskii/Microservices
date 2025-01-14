@@ -10,6 +10,8 @@ function PongGame() {
     const [ballSpeed, setBallSpeed] = useState(0);
     const [playerScore, setPlayerScore] = useState(0);
     const [botScore, setBotScore] = useState(0);
+    const [gameOver, setGameOver] = useState(false);
+    const [winner, setWinner] = useState('');
 
     const [ball, setBall] = useState({ x: 50, y: 50, dx: 1, dy: 1 });
     const [playerY, setPlayerY] = useState(40);
@@ -34,12 +36,12 @@ function PongGame() {
 
             if (y <= 0 || y >= 99) dy = -dy;
 
-            if (x <= 3 && y >= playerY-2 && y <= playerY + 22) {
+            if (x <= 3 && y >= playerY - 2 && y <= playerY + 22) {
                 x = 3;
                 dx = -dx;
             }
 
-            if (x >= 95 && y >= botY-2 && y <= botY + 22){
+            if (x >= 95 && y >= botY - 2 && y <= botY + 22) {
                 x = 95;
                 dx = -dx;
             }
@@ -69,14 +71,12 @@ function PongGame() {
                 if (Math.abs(botMovement + random) > 2) {
                     newY = prev + Math.sign(botMovement + random) * 0.5;
                 }
-            }
-            else if (difficulty === 'medium') {
+            } else if (difficulty === 'medium') {
                 random = Math.random() * 2;
                 if (Math.abs(botMovement + random) > 1) {
                     newY = prev + Math.sign(botMovement + random);
                 }
-            }
-            else if (difficulty === 'hard') {
+            } else if (difficulty === 'hard') {
                 newY = prev + Math.sign(botMovement) * 2;
             }
 
@@ -89,38 +89,37 @@ function PongGame() {
 
     const resetBall = () => {
         const randomDirection = Math.random() < 0.5 ? -1 : 1;
-        return { x: 50-randomDirection*35, y: 45, dx: randomDirection, dy: ball.dy };
+        return { x: 50 - randomDirection * 35, y: 45, dx: randomDirection, dy: ball.dy };
     };
 
     const handleKeyPress = (e) => {
         if (e.key === 'w' || e.key === 'W') {
             const temp = playerY - 5;
-            if (playerY > 0)
-                setPlayerY(temp);
+            if (playerY > 0) setPlayerY(temp);
         } else if (e.key === 's' || e.key === 'S') {
             const temp = playerY + 5;
-            if (playerY < 80)
-                setPlayerY(temp);
+            if (playerY < 80) setPlayerY(temp);
         }
     };
 
     useEffect(() => {
         if (playerScore >= 10 || botScore >= 10) {
-            alert(playerScore >= 10 ? 'Wygrałeś!' : 'Przegrałeś!');
+            setWinner(playerScore >= 10 ? 'Wygrałeś!' : 'Przegrałeś!');
+            setBall({ x: 50, y: 50, dx: 0, dy: 0 });
+            setGameOver(true);
             saveScore();
-            navigate('/');
         }
-    }, [playerScore, botScore, navigate]);
+    }, [playerScore, botScore]);
 
     const saveScore = async () => {
         const username = localStorage.getItem('username');
-        const gameName = "Pong";
+        const gameName = 'Pong';
 
         const scoreData = {
             name: gameName,
             scores: [
                 {
-                    username
+                    username,
                 },
             ],
         };
@@ -130,7 +129,7 @@ function PongGame() {
             const response = await fetch('http://localhost:8082/dashboard/addScore', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(scoreData),
@@ -152,19 +151,28 @@ function PongGame() {
 
     return (
         <div className="difficulty-container">
-        <div>
-            <div className="scoreboard">
-                <span>Gracz: {playerScore}</span>
-                <span>Bot: {botScore}</span>
-            </div>
-            <div className="pong-container" tabIndex={0} onKeyDown={handleKeyPress}>
-                <div className="pong-game">
-                    <div className="paddle player" style={{top: `${playerY}%`}}></div>
-                    <div className="ball" style={{top: `${ball.y}%`, left: `${ball.x}%`}}></div>
-                    <div className="paddle bot" style={{top: `${botY}%`}}></div>
+            <div>
+                <div className="scoreboard">
+                    <span>Gracz: {playerScore}</span>
+                    <span>Bot: {botScore}</span>
+                </div>
+                <div className="pong-container" tabIndex={0} onKeyDown={handleKeyPress}>
+                    <div className="pong-game">
+                        <div className="paddle player" style={{ top: `${playerY}%` }}></div>
+                        <div className="ball" style={{ top: `${ball.y}%`, left: `${ball.x}%` }}></div>
+                        <div className="paddle bot" style={{ top: `${botY}%` }}></div>
+                    </div>
                 </div>
             </div>
-        </div>
+            {gameOver && ( // Modal
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>{winner}</h2>
+                        <p>Twój wynik: {playerScore}</p>
+                        <button className="default-button" onClick={() => navigate('/')}>Powrót do menu</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
