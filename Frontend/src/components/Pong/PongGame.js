@@ -34,7 +34,7 @@ function PongGame() {
         setBall((prev) => {
             let { x, y, dx, dy } = prev;
 
-            if (y <= 0 || y >= 99) dy = -dy;
+            if (y <= 0 || y >= 97) dy = -dy;
 
             if (x <= 3 && y >= playerY - 2 && y <= playerY + 22) {
                 x = 3;
@@ -67,12 +67,12 @@ function PongGame() {
             let newY = prev;
 
             if (difficulty === 'easy') {
-                random = Math.random() * 5;
+                random = Math.random() * 15;
                 if (Math.abs(botMovement + random) > 2) {
                     newY = prev + Math.sign(botMovement + random) * 0.5;
                 }
             } else if (difficulty === 'medium') {
-                random = Math.random() * 2;
+                random = Math.random() * 5;
                 if (Math.abs(botMovement + random) > 1) {
                     newY = prev + Math.sign(botMovement + random);
                 }
@@ -103,8 +103,8 @@ function PongGame() {
     };
 
     useEffect(() => {
-        if (playerScore >= 10 || botScore >= 10) {
-            setWinner(playerScore >= 10 ? 'Wygrałeś!' : 'Przegrałeś!');
+        if (playerScore >= 1 || botScore >= 1) {
+            setWinner(playerScore >= 1 ? 'Wygrałeś!' : 'Przegrałeś!');
             setBall({ x: 50, y: 50, dx: 0, dy: 0 });
             setGameOver(true);
             saveScore();
@@ -112,27 +112,21 @@ function PongGame() {
     }, [playerScore, botScore]);
 
     const saveScore = async () => {
-        const username = localStorage.getItem('username');
-        const gameName = 'Pong';
-
-        const scoreData = {
-            name: gameName,
-            scores: [
-                {
-                    username,
-                },
-            ],
-        };
-
         const token = localStorage.getItem('token');
+        const username = localStorage.getItem('username');
+        const params = new URLSearchParams({
+            playerName: username,
+            player1Score: playerScore,
+            player2Score: botScore,
+            difficulty: difficulty,
+        });
+
         try {
-            const response = await fetch('http://localhost:8082/dashboard/addScore', {
+            const response = await fetch(`http://localhost:8082/pong/calculate-end-score?${params.toString()}`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(scoreData),
             });
 
             if (!response.ok) {
@@ -149,6 +143,7 @@ function PongGame() {
         }
     };
 
+
     return (
         <div className="difficulty-container">
             <div>
@@ -164,11 +159,11 @@ function PongGame() {
                     </div>
                 </div>
             </div>
-            {gameOver && ( // Modal
+            {gameOver && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <h2>{winner}</h2>
-                        <p>Twój wynik: {playerScore}</p>
+                        <h3>Twój wynik: {playerScore}</h3>
                         <button className="default-button" onClick={() => navigate('/')}>Powrót do menu</button>
                     </div>
                 </div>
