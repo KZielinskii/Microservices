@@ -6,6 +6,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.nsa.*;
+import pl.nsa.service.GameSessionService;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -21,6 +22,9 @@ public class GameController {
     @Inject
     GameScoreCalculator gameScoreCalculator;
 
+    @Inject
+    GameSessionService gameSessionService;
+
     @POST
     @Path("/start")
     @Produces(MediaType.APPLICATION_JSON)
@@ -32,6 +36,7 @@ public class GameController {
         gameSession.setPlayerSymbol(symbol.charAt(0));
         String sessionId = UUID.randomUUID().toString();
         sessionManager.createSession(sessionId, gameSession);
+
         if(firstMove.equals("AI")) {
             gameSession.makeAIMove();
         }
@@ -40,6 +45,7 @@ public class GameController {
             board[i] = "\""+ Arrays.toString(gameSession.getBoard()[i]) + "\"";
             board[i] = board[i].replace("[","").replace("]","").replace(",","").replace(" ","");
         }
+        gameSessionService.saveGameSession(gameSession, sessionId);
         return Response.ok("{\"sessionId\": \"" + sessionId+ "\",\"board\":"+ Arrays.toString(board) + "}" ).build();
     }
 
@@ -52,7 +58,9 @@ public class GameController {
         System.out.println("Player move: " + move.getX() + ", " + move.getY());
         GameSession gameSession = sessionManager.getSession(sessionId);
         if (gameSession == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Session not found").build();
+            gameSession=gameSessionService.findBySessionId(sessionId);
+            if(gameSession == null)
+                return Response.status(Response.Status.BAD_REQUEST).entity("Session not found").build();
         }
         if (!gameSession.makePlayerMove(move)) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -60,6 +68,7 @@ public class GameController {
                     .build();
         }
         gameSession.updateMoveCounter();
+        gameSessionService.modifyGameSession(gameSession,sessionId);
         if (gameSession.checkWinner()) {
             gameSession.calculateScore(GameResult.WIN);
             return Response.ok(new GameStatus(gameSession.getBoard(), "Player wins!",gameSession.calculateScore(GameResult.WIN))).build();
@@ -77,6 +86,7 @@ public class GameController {
             gameSession.calculateScore(GameResult.DRAW);
             return Response.ok(new GameStatus(gameSession.getBoard(), "Draw!",gameSession.calculateScore(GameResult.DRAW))).build();
         }
+
         return Response.ok(new GameStatus(gameSession.getBoard(), "In progress",gameSession.calculateScore(GameResult.INPROGRESS))).build();
     }
 }

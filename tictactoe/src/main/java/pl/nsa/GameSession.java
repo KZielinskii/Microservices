@@ -16,7 +16,7 @@ public class GameSession implements Serializable {
     private char aiSymbol;
     private Long UserId;
     private Integer moveCounter = 0;
-    private final LocalDateTime expirationTime;
+    private LocalDateTime expirationTime;
 
     GameScoreCalculator gameScoreCalculator;
 
@@ -213,5 +213,53 @@ public class GameSession implements Serializable {
             }
         }
         board[bestRow][bestCol] = aiSymbol;
+    }
+
+    public void setBoard(char[][] board) {
+        this.board = board;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public char getPlayerSymbol() {
+        return playerSymbol;
+    }
+
+    public char getAiSymbol() {
+        return aiSymbol;
+    }
+
+    public void setAiSymbol(char aiSymbol) {
+        this.aiSymbol = aiSymbol;
+    }
+
+    public Long getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(Long userId) {
+        UserId = userId;
+    }
+
+    public Integer getMoveCounter() {
+        return moveCounter;
+    }
+
+    public void setMoveCounter(Integer moveCounter) {
+        this.moveCounter = moveCounter;
+    }
+
+    public LocalDateTime getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(LocalDateTime expirationTime) {
+        this.expirationTime = expirationTime;
     }
 }

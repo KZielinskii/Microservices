@@ -391,5 +391,12 @@
             return true;
         }
 
+        public List<Integer> getSunkenShips() {
+            return sunkenShips;
+        }
+
+        public void setSunkenShips(List<Integer> sunkenShips) {
+            this.sunkenShips = sunkenShips;
+        }
     }
 

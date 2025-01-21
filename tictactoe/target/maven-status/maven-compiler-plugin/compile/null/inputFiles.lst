@@ -1,8 +1,11 @@
 C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\controller\GameController.java
 C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\Difficulty.java
+C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\domain\GameSessionDomain.java
 C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\GameResult.java
 C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\GameScoreCalculator.java
 C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\GameSession.java
 C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\GameStatus.java
 C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\PlayerMove.java
+C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\repository\GameSessionRepository.java
+C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\service\GameSessionService.java
 C:\Users\kapiz\OneDrive\Dokumenty\GitHub\NSAProjekt\tictactoe\src\main\java\pl\nsa\SessionManager.java

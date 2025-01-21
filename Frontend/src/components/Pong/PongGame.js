@@ -103,8 +103,8 @@ function PongGame() {
     };
 
     useEffect(() => {
-        if (playerScore >= 1 || botScore >= 1) {
-            setWinner(playerScore >= 1 ? 'Wygrałeś!' : 'Przegrałeś!');
+        if (playerScore >= 5 || botScore >= 5) {
+            setWinner(playerScore >= 5 ? 'Wygrałeś!' : 'Przegrałeś!');
             setBall({ x: 50, y: 50, dx: 0, dy: 0 });
             setGameOver(true);
             saveScore();
@@ -122,10 +122,11 @@ function PongGame() {
         });
 
         try {
-            const response = await fetch(`http://localhost:8082/pong/calculate-end-score?${params.toString()}`, {
+            const response = await fetch(`http://localhost:8082/pong/calculate-and-save-score?${params.toString()}`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
                 },
             });
 
