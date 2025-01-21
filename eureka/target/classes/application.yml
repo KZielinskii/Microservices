@@ -9,7 +9,7 @@ eureka:
       enabled: true
   server:
     wait-time-in-ms-when-sync-empty: 0
-
+    enable-self-preservation: false
 spring:
   application:
     name: eureka-server

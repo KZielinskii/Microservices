@@ -1,10 +1,10 @@
 package main.pong.controller;
 
-import main.dashboard.domain.*;
-import main.dashboard.domain.Score;
+
 import main.pong.Difficulty;
+import main.pong.Game;
+import main.pong.Score;
 import main.pong.service.PongService;
-import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;

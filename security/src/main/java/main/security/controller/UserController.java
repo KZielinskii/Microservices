@@ -27,10 +27,20 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public Users register(@RequestBody Users user) {
+    public ResponseEntity<String> register(@RequestBody Users user) {
         System.out.println("register");
-        return service.register(user);
+        if (userDetailsService.findByUsername(user.getUsername()) != null) {
+            // Return with Content-Type: application/json
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .header("Content-Type", "application/json")
+                    .body("{\"error\": \"Username already exists\"}");
+        }
+        Users registeredUser = service.register(user);
 
+        // Return JSON response
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/json")
+                .body("{\"id\": " + registeredUser.getId() + ", \"username\": \"" + registeredUser.getUsername() + "\"}");
     }
 
     @PostMapping("/login")

@@ -27,4 +27,8 @@ public class MyUserDetailsService implements UserDetailsService {
         
         return new UserPrincipal(user);
     }
+
+    public Users findByUsername(String username) {
+        return userRepo.findByUsername(username);
+    }
 }
