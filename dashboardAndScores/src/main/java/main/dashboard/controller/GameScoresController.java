@@ -22,6 +22,21 @@ public class GameScoresController {
     public GameScoresController(@Qualifier("gameService") GameService gameService, @Qualifier("scoreService") ScoreService scoreService) {
         this.gameService = gameService;
         this.scoreService = scoreService;
+        if(gameService.getGameByName("Ships game") == null) {
+            Game game1= new Game();
+            game1.setName("Ships game");
+            gameService.save(game1);
+        }
+        if(gameService.getGameByName("Tic Tac Toe") == null) {
+            Game game2= new Game();
+            game2.setName("Tic Tac Toe");
+            gameService.save(game2);
+        }
+        if(gameService.getGameByName("PONG") == null) {
+            Game game3= new Game();
+            game3.setName("PONG");
+            gameService.save(game3);
+        }
     }
 
     @PostMapping("/addScore")

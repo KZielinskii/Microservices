@@ -137,7 +137,7 @@ function Board() {
             {winner ? (
             <div>
                 <button className="reset-button" onClick={restartGame}>
-                    Zagraj ponownie
+                    Zapisz wynik i zagraj ponownie
                 </button>
             </div>):(<div></div>)}
         </div>
